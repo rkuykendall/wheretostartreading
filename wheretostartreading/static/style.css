@@ -1,3 +1,64 @@
 body {
-  border: 10px solid black;
+  margin: 0;
+  padding: 0;
+}
+
+.body {
+  font-family: 'Open Sans', Helvetica, sans-serif;
+  font-size: 17px;
+  padding: 40px;
+  margin: 0px auto;
+  max-width: 40em;
+  padding: 15px;
+}
+
+header {
+  background-color: #f2f2f2;
+  border-bottom: 1px solid #eee;
+}
+
+header p,
+header p a {
+  font-weight: normal;
+  text-decoration: none;
+  font-size: 16px;
+  color: #666;
+}
+
+header p a {
+  color: #000;
+}
+
+h1, h2, h3 {
+  font-weight: normal;
+  font-family: 'Libre Baskerville', serif;
+}
+
+h1 a {
+  color: black;
+  text-decoration: none;
+  font-size: 35px;
+  margin-bottom: 15px;
+  line-height: 1.3em;
+  font-weight: normal;
+  padding: 1px 0px;
+}
+
+h1 a:hover {
+  color: #0066AA;
+  background: #cde0ed;
+  text-decoration: none;
+}
+
+h2 {
+  color: #848484;
+}
+
+a, a:link {
+  color: #0066AA;
+  text-decoration: none;
+  border: none;
+  }
+  a:hover {
+    text-decoration: underline;
 }
