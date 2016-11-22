@@ -1,3 +1,4 @@
+dj-database-url==0.4.1
 Django==1.9.11
 django-simple-history==1.8.1
 gunicorn==19.6.0
