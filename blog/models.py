@@ -45,5 +45,9 @@ class Article(models.Model):
 
         return self.content
 
+    @property
+    def canonical_url(self):
+        return "http://wheretostartreading.com/{}/".format(self.slug)
+
     def get_absolute_url(self):
         return reverse('blog.views.article', args=[self.slug])

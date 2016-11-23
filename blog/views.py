@@ -1,9 +1,11 @@
+from datetime import datetime
+
 from django.shortcuts import render
 from .models import Article
 
 
 def home(request):
-    articles = Article.objects.filter(published_at__isnull=False)
+    articles = Article.objects.filter(published_at__lte=datetime.now())
     return render(request, 'home.html', {'articles': articles})
 
 

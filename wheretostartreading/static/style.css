@@ -54,6 +54,11 @@ h2 {
   color: #848484;
 }
 
+h2.subtitle {
+  margin-top: 0px;
+  margin-bottom: 2em;
+}
+
 a, a:link {
   color: #0066AA;
   text-decoration: none;
@@ -61,4 +66,17 @@ a, a:link {
   }
   a:hover {
     text-decoration: underline;
+}
+
+.disqus_wrapper {
+  background-color: #f2f2f2;
+  ]border-bottom: 1px solid #eee;
+  padding: 30px;
+  background-color: #f2f2f2;
+  border-top: 1px solid #eee;
+}
+
+#disqus_thread {
+  margin: 0px auto;
+  max-width: 980px;
 }
