@@ -16,7 +16,7 @@
 {% block content %}
 <div class="body">
   <h1><a href="{% url 'article' slug=article.slug %}">{{ article.title }}</a></h1>
-  <h2 class="subtitle">{{ article.published_at|date:"d M Y" }}</h2>
+  <h2 class="subtitle">Updated {{ article.modified_at|date:"M d, Y" }}</h2>
   <p>{{ article.content_html|safe }}</p>
 </div>
 
