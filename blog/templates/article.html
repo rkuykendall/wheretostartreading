@@ -15,8 +15,8 @@
 
 {% block content %}
 <div class="body">
+  <p class="metainfo">Last updated {{ article.modified_at|date:"M d, Y" }}</h2>
   <h1><a href="{% url 'article' slug=article.slug %}">{{ article.title }}</a></h1>
-  <h2 class="subtitle">Updated {{ article.modified_at|date:"M d, Y" }}</h2>
   <p>{{ article.content_html|safe }}</p>
 </div>
 
@@ -37,5 +37,5 @@
     })();
   </script>
   <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-<div class="disqus_wrapper">              
+<div class="disqus_wrapper">
 {% endblock %}

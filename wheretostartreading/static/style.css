@@ -17,6 +17,11 @@ header {
   border-bottom: 1px solid #eee;
 }
 
+.metainfo {
+  color: #ddd;
+  margin-bottom: -20px;
+}
+
 header p,
 header p a {
   font-weight: normal;
@@ -73,8 +78,6 @@ li {
 }
 
 .disqus_wrapper {
-  background-color: #f2f2f2;
-  ]border-bottom: 1px solid #eee;
   padding: 30px;
   background-color: #f2f2f2;
   border-top: 1px solid #eee;
