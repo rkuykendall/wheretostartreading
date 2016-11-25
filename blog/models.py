@@ -11,6 +11,39 @@ MARKUP_CHOICES = [
     ['html', 'HTML'],
 ]
 
+AFFILIATE_ID = 'roberkuyke-20'
+
+
+def asin_to_html(line):
+    params = [s.strip() for s in line.split(' ')[1:]]
+    asin = params.pop(0)
+
+    link_url = 'http://www.amazon.com/dp/{}/?tag={}'.format(
+        asin, AFFILIATE_ID)
+
+    image_url = (
+        '//ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN={}'
+        '&Format=_SL500_&ID=AsinImage&MarketPlace=US'
+        '&ServiceVersion=20070822&WS=1&tag={}').format(
+            asin, AFFILIATE_ID)
+
+    return (
+        '<a href="{}" class="amazon-thumbnail" target="_blank">'
+        '<img src="{}"></img>'
+        '</a>').format(link_url, image_url)
+
+
+def process_asin(content):
+    processed = []
+
+    for line in content.split('\n'):
+        if line[:4] == 'ASIN':
+            processed.append(asin_to_html(line))
+        else:
+            processed.append(line)
+
+    return '\n'.join(processed)
+
 
 class Article(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
@@ -40,10 +73,12 @@ class Article(models.Model):
 
     @property
     def content_html(self):
-        if self.markup == 'markdown':
-            return markdown.markdown(self.content)
+        content = process_asin(self.content)
 
-        return self.content
+        if self.markup == 'markdown':
+            return markdown.markdown(content)
+
+        return content
 
     @property
     def canonical_url(self):
