@@ -83,8 +83,8 @@ li {
   border-top: 1px solid #eee;
 }
 
-#disqus_thread {
-  margin: 0px auto;
+#disqus_thread, .disqus_wrapper h2 {
+  margin: 30px auto;
   max-width: 980px;
 }
 
