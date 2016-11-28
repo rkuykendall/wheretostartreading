@@ -73,6 +73,10 @@ class Article(models.Model):
         return "{}{}".format(published, self.title)
 
     @property
+    def published(self):
+        return self.published_at is not None
+
+    @property
     def content_html(self):
         content = process_asin(self.content)
 
