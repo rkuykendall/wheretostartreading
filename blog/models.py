@@ -69,7 +69,8 @@ class Article(models.Model):
         return self.title
 
     def __str__(self):
-        return "Article: {}".format(self.title)
+        published = 'Unpublished: ' if not self.published_at else ''
+        return "{}{}".format(published, self.title)
 
     @property
     def content_html(self):
