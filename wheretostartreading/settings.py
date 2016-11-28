@@ -23,9 +23,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-
 ALLOWED_HOSTS = ['.wheretostartreading.com', 'localhost']
 
 
@@ -43,6 +40,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE_CLASSES = [
+    'django.middleware.gzip.GZipMiddleware',
     'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -148,46 +146,54 @@ STATICFILES_DIRS = (
 
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
+if 'MEMCACHE_SERVERS' in os.environ:
+    DEBUG = False
 
-os.environ['MEMCACHE_SERVERS'] = os.environ.get(
-    'MEMCACHIER_SERVERS', '').replace(',', ';')
-os.environ['MEMCACHE_USERNAME'] = os.environ.get('MEMCACHIER_USERNAME', '')
-os.environ['MEMCACHE_PASSWORD'] = os.environ.get('MEMCACHIER_PASSWORD', '')
+    os.environ['MEMCACHE_SERVERS'] = os.environ.get(
+        'MEMCACHIER_SERVERS', '').replace(',', ';')
+    os.environ['MEMCACHE_USERNAME'] = os.environ.get('MEMCACHIER_USERNAME', '')
+    os.environ['MEMCACHE_PASSWORD'] = os.environ.get('MEMCACHIER_PASSWORD', '')
 
-CACHES = {
-    'default': {
-        # Use pylibmc
-        'BACKEND': 'django_pylibmc.memcached.PyLibMCCache',
+    CACHES = {
+        'default': {
+            # Use pylibmc
+            'BACKEND': 'django_pylibmc.memcached.PyLibMCCache',
 
-        # Use binary memcache protocol (needed for authentication)
-        'BINARY': True,
+            # Use binary memcache protocol (needed for authentication)
+            'BINARY': True,
 
-        # TIMEOUT is not the connection timeout! It's the default expiration
-        # timeout that should be applied to keys! Setting it to `None`
-        # disables expiration.
-        'TIMEOUT': None,
+            # TIMEOUT is not the connection timeout! It's the default
+            # expiration timeout that should be applied to keys! Setting it to
+            # `None` disables expiration.
+            'TIMEOUT': None,
 
-        'OPTIONS': {
-            # Enable faster IO
-            'no_block': True,
-            'tcp_nodelay': True,
+            'OPTIONS': {
+                # Enable faster IO
+                'no_block': True,
+                'tcp_nodelay': True,
 
-            # Keep connection alive
-            'tcp_keepalive': True,
+                # Keep connection alive
+                'tcp_keepalive': True,
 
-            # Timeout for set/get requests
-            '_poll_timeout': 2000,
+                # Timeout for set/get requests
+                '_poll_timeout': 2000,
 
-            # Use consistent hashing for failover
-            'ketama': True,
+                # Use consistent hashing for failover
+                'ketama': True,
 
-            # Configure failover timings
-            'connect_timeout': 2000,
-            'remove_failed': 4,
-            'retry_timeout': 2,
-            'dead_timeout': 10
+                # Configure failover timings
+                'connect_timeout': 2000,
+                'remove_failed': 4,
+                'retry_timeout': 2,
+                'dead_timeout': 10
+            }
         }
     }
-}
 
-CACHE_MIDDLEWARE_SECONDS = 6000
+    CACHE_MIDDLEWARE_SECONDS = 6000
+else:
+    # SECURITY WARNING: don't run with debug turned on in production!
+    DEBUG = True
+
+
+COMPRESS_ENABLED = True
