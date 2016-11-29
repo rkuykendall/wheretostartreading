@@ -13,7 +13,7 @@ body {
 }
 
 header {
-  background-color: #1c222e;
+  background-color: #0C1B2D;
   border-bottom: 1px solid #000;
 }
 
@@ -32,20 +32,16 @@ header {
   margin-bottom: -20px;
 }
 
-header p {
-  /*padding-left: 50px;*/
-}
-
 header p,
 header p a {
   font-weight: normal;
   text-decoration: none;
   font-size: 16px;
-  color: #8c919d;
+  color: #8B96A5;
 }
 
 header p a {
-  color: #65cf7c;
+  color: #4DDD74;
 }
 
 h1, h2, h3 {
@@ -69,7 +65,7 @@ h1 a:hover {
 }
 
 h2 {
-  color: #7e8890;
+  color: #6B757C;
   font-size: 28px;
   margin-top: 1em;
   margin-bottom: 0.25em;
@@ -81,7 +77,7 @@ h2.subtitle {
 }
 
 a, a:link {
-  color: #1b8ff8;
+  color: #0090FF;
   text-decoration: none;
   border: none;
   }
@@ -95,8 +91,8 @@ li {
 
 .disqus_wrapper {
   padding: 30px;
-  background-color: #f2f2f2;
-  border-top: 1px solid #eee;
+  background-color: #EFF2F4;
+  border-top: 2px solid #E5E8EA;
 }
 
 #disqus_thread, .disqus_wrapper h2 {
