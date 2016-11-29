@@ -1,17 +1,18 @@
 {% extends 'base.html' %}
 
 {% block head %}
-<meta content="{{article.canonical_url}}" property="og:url">
+<title>{{article.title}}</title>
+
+<link rel="canonical" href="{{article.canonical_url}}">
 
 <meta content="article" property="og:type">
 <meta content="{{article.title}}" property="og:title">
 <meta content="{{article.canonical_url}}" property="og:url">
+<meta content="{{article.description}}" property="og:description">
 
 <meta content="{{ article.published_at|date:"c" }}" property="article:published_time">
 <meta content="http://wheretostartreading.com/" property="article:author">
 {% endblock %}
-
-
 
 {% block content %}
 <div class="body">
