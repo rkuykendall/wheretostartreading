@@ -8,13 +8,23 @@ body {
   font-size: 17px;
   padding: 40px;
   margin: 0px auto;
-  max-width: 40em;
+  max-width: 680px;
   padding: 15px;
 }
 
 header {
-  background-color: #f2f2f2;
-  border-bottom: 1px solid #eee;
+  background-color: #1c222e;
+  border-bottom: 1px solid #000;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+}
+
+#logo {
+  height: 50px;
+  margin-right: 15px;
 }
 
 .metainfo {
@@ -22,27 +32,31 @@ header {
   margin-bottom: -20px;
 }
 
+header p {
+  /*padding-left: 50px;*/
+}
+
 header p,
 header p a {
   font-weight: normal;
   text-decoration: none;
   font-size: 16px;
-  color: #666;
+  color: #8c919d;
 }
 
 header p a {
-  color: #000;
+  color: #65cf7c;
 }
 
 h1, h2, h3 {
-  font-weight: normal;
-  font-family: 'Libre Baskerville', serif;
+  font-weight: 400;
+  font-family: 'Noto Serif', serif;
 }
 
 h1 a {
   color: black;
   text-decoration: none;
-  font-size: 35px;
+  font-size: 38px;
   margin-bottom: 15px;
   line-height: 1.3em;
   font-weight: normal;
@@ -50,13 +64,15 @@ h1 a {
 }
 
 h1 a:hover {
-  color: #0066AA;
-  background: #cde0ed;
+  color: #1b8ff8;
   text-decoration: none;
 }
 
 h2 {
-  color: #848484;
+  color: #7e8890;
+  font-size: 28px;
+  margin-top: 1em;
+  margin-bottom: 0.25em;
 }
 
 h2.subtitle {
@@ -65,7 +81,7 @@ h2.subtitle {
 }
 
 a, a:link {
-  color: #0066AA;
+  color: #1b8ff8;
   text-decoration: none;
   border: none;
   }
@@ -90,5 +106,5 @@ li {
 
 .amazon-thumbnail img {
   height: 250px;
-  border: 1px solid #282c34;
+  border: 2px solid #1c222e;
 }
