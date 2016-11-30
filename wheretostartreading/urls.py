@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.contrib.sitemaps.views import sitemap
@@ -18,7 +20,7 @@ class HomepageSitemap(Sitemap):
 
 sitemaps = {
     'blog': GenericSitemap({
-            'queryset': Article.objects.all(),
+            'queryset': Article.objects.filter(published_at__lte=datetime.now()),
             'date_field': 'modified_at',
         }, priority=0.6),
     'homepage': HomepageSitemap,
