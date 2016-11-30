@@ -1,7 +1,8 @@
 import markdown
 
-from django.db import models
+from django.core.files.storage import default_storage
 from django.core.urlresolvers import reverse
+from django.db import models
 
 from simple_history.models import HistoricalRecords
 
@@ -84,6 +85,14 @@ class Article(models.Model):
             return markdown.markdown(content)
 
         return content
+
+    @property
+    def slug_image(self):
+        filepath = 'articles/{}.jpg'.format(self.slug)
+        if default_storage.exists('wheretostartreading/static/'+filepath):
+            return filepath
+        else:
+            return None
 
     @property
     def canonical_url(self):

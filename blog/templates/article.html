@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load staticfiles %}
 
 {% block head %}
 <title>{{article.title}}</title>
@@ -12,6 +13,10 @@
 
 <meta content="{{ article.published_at|date:"c" }}" property="article:published_time">
 <meta content="http://wheretostartreading.com/" property="article:author">
+
+{% if article.slug_image %}
+  <meta content="http://wheretostartreading.com{% static article.slug_image %}" property="og:image">
+{% endif %}
 {% endblock %}
 
 {% block content %}

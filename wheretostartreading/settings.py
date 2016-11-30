@@ -146,7 +146,7 @@ STATICFILES_DIRS = (
 
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
-if 'MEMCACHE_SERVERS' in os.environ:
+if os.environ.get('MEMCACHIER_SERVERS', '') != '':
     DEBUG = False
 
     os.environ['MEMCACHE_SERVERS'] = os.environ.get(

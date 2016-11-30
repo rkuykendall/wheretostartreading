@@ -104,3 +104,8 @@ li {
   height: 250px;
   border: 2px solid #1c222e;
 }
+
+img.slug-image {
+  width: 500px;
+  border: 2px solid #1c222e;
+}
