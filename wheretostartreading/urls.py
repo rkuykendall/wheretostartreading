@@ -5,6 +5,7 @@ from django.contrib import admin
 from django.contrib.sitemaps.views import sitemap
 from django.contrib.sitemaps import GenericSitemap, Sitemap
 from django.core.urlresolvers import reverse
+from django.http import HttpResponse
 
 from blog.models import Article
 
@@ -31,4 +32,11 @@ urlpatterns = [
     url(r'', include('blog.urls')),
     url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps},
         name='django.contrib.sitemaps.views.sitemap'),
+    url(r'^robots.txt$', lambda r: HttpResponse(
+        (
+            "User-agent: * \n"
+            "Disallow: \n"
+            "Sitemap: http://wheretostartreading.com/sitemap.xml"
+        ),
+        content_type="text/plain"))
 ]
