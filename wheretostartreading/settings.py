@@ -191,7 +191,7 @@ if os.environ.get('MEMCACHIER_SERVERS', '') != '':
         }
     }
 
-    CACHE_MIDDLEWARE_SECONDS = 6000
+    CACHE_MIDDLEWARE_SECONDS = 600
 else:
     # SECURITY WARNING: don't run with debug turned on in production!
     DEBUG = True
