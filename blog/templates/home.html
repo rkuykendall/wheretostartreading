@@ -6,9 +6,13 @@
 
 {% block content %}
 {% for article in articles %}
-  <div class="body">
-      <h2><a href="{% url 'article' slug=article.slug %}">{{ article.title }}</a></h2>
-      <p>{{ article.description }}</p>
-  </div>
+<div class="container">
+<div class="row">
+<div class="col-sm-12 col-md-8 col-md-offset-2">
+  <h2><a href="{% url 'article' slug=article.slug %}">{{ article.title }}</a></h2>
+  <p>{{ article.description }}</p>
+</div>
+</div>
+</div>
 {% endfor %}
 {% endblock %}

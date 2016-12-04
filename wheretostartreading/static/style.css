@@ -1,15 +1,8 @@
 body {
   margin: 0;
   padding: 0;
-}
-
-.body {
   font-family: 'Open Sans', Helvetica, sans-serif;
   font-size: 17px;
-  padding: 40px;
-  margin: 0px auto;
-  max-width: 680px;
-  padding: 15px;
 }
 
 header {
@@ -20,6 +13,7 @@ header {
 .header {
   display: flex;
   align-items: center;
+  padding: 10px 0px;
 }
 
 #logo {
@@ -40,7 +34,8 @@ header p a {
   color: #8B96A5;
 }
 
-header p a {
+header p a,
+header p a:hover {
   color: #4DDD74;
 }
 
@@ -96,16 +91,10 @@ li {
 }
 
 #disqus_thread, .disqus_wrapper h2 {
-  margin: 30px auto;
-  max-width: 980px;
 }
 
 .amazon-thumbnail img {
   height: 250px;
   border: 2px solid #1c222e;
-}
-
-img.slug-image {
-  width: 500px;
-  border: 2px solid #1c222e;
+  margin-bottom: 5px;
 }

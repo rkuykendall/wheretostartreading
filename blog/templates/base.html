@@ -3,6 +3,7 @@
     <head>
         <meta name="google-site-verification" content="uGvWL_E56VqSKLbzXQZijwCBBjPb59ZVBjDqy1_lzPc" />
         <link rel="icon" href="{% static 'favicon.png' %}" />
+        <link rel="stylesheet" href="{% static 'bootstrap.grid.min.css' %}">
         <link rel="stylesheet" href="{% static 'style.css' %}">
         <link href="https://fonts.googleapis.com/css?family=Noto+Serif" rel="stylesheet">
         <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400italic,600italic,700,700italic,800,800italic,600,400' rel='stylesheet' type='text/css'>
@@ -12,7 +13,9 @@
     </head>
     <body>
       <header>
-        <div class="body">
+        <div class="container">
+        <div class="row">
+        <div class="col-sm-12 col-md-8 col-md-offset-2">
           <div class="header">
             <a href="/"><img src="{% static 'logo.png' %}" id="logo" /></a>
             <p>
@@ -20,6 +23,8 @@
               &mdash; Simple comic guides, with links to books.
             </p>
           </div>
+        </div>
+        </div>
         </div>
       </header>
 

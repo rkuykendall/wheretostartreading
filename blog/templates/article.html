@@ -20,15 +20,22 @@
 {% endblock %}
 
 {% block content %}
-<div class="body">
+<div class="container">
+<div class="row">
+<div class="col-sm-12 col-md-8 col-md-offset-2">
   <p class="metainfo">Last updated {{ article.modified_at|date:"M d, Y" }}</h2>
   <h1><a href="{% url 'article' slug=article.slug %}">{{ article.title }}</a></h1>
   <p>{{ article.content_html|safe }}</p>
 
-  <p>&mdash; Written by Robert Kuykendall. Follow <a href="https://twitter.com/startcomics">@startcomics</a> for more.</p>
+  <p>&mdash; Written by Robert Kuykendall. <a href="https://twitter.com/startcomics">Follow @startcomics</a> for more.</p>
+</div>
+</div>
 </div>
 
 <div class="disqus_wrapper">
+<div class="container">
+<div class="row">
+<div class="col-sm-12">
   <h2>If you have any questions I am happy to answer them! &mdash;Robert</h2>
 
   <div id="disqus_thread"></div>
@@ -47,5 +54,8 @@
     })();
   </script>
   <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-<div class="disqus_wrapper">
+</div>
+</div>
+</div>
+</div>
 {% endblock %}
