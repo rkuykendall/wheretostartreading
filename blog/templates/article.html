@@ -24,6 +24,8 @@
   <p class="metainfo">Last updated {{ article.modified_at|date:"M d, Y" }}</h2>
   <h1><a href="{% url 'article' slug=article.slug %}">{{ article.title }}</a></h1>
   <p>{{ article.content_html|safe }}</p>
+
+  <p>&mdash; Written by Robert Kuykendall. Follow <a href="https://twitter.com/startcomics">@startcomics</a> for more.</p>
 </div>
 
 <div class="disqus_wrapper">
