@@ -95,6 +95,8 @@ li {
 
 .amazon-thumbnail img {
   height: 250px;
+  min-width: 160px;
+  background-color: #1c222e;
   border: 2px solid #1c222e;
   margin-bottom: 5px;
 }

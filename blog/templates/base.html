@@ -27,7 +27,6 @@
 
               Array.prototype.forEach.call(images, function(image, i) {
                 var retinaURL = image.getAttribute("data-2x");
-                console.log(retinaURL);
 
                 const testImage = document.createElement('img');
                 testImage.addEventListener('load', () => {
