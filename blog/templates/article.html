@@ -4,6 +4,10 @@
 {% block head %}
 <title>{{article.title}}</title>
 
+<meta name="description" content="{{article.description}}">
+<meta name="keywords" content="start,comics,reading,order,trade,tpb,amazon,buy">
+<meta name="author" content="Robert Kuykendall">
+
 <link rel="canonical" href="{{article.canonical_url}}">
 
 <meta content="article" property="og:type">
@@ -20,6 +24,22 @@
 {% endblock %}
 
 {% block content %}
+<header>
+  <div class="container">
+  <div class="row">
+  <div class="col-sm-12 col-md-8 col-md-offset-2">
+    <div class="header">
+      <a href="/"><img src="{% static 'logo.png' %}" id="logo" /></a>
+      <p>
+        <a href="/">Where to Start Reading</a>
+        &mdash; Simple comic guides, with links to books.
+      </p>
+    </div>
+  </div>
+  </div>
+  </div>
+</header>
+
 <div class="container">
 <div class="row">
 <div class="col-sm-12 col-md-8 col-md-offset-2">

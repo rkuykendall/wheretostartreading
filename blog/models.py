@@ -12,7 +12,7 @@ MARKUP_CHOICES = [
     ['html', 'HTML'],
 ]
 
-AFFILIATE_ID = 'roberkuyke-20'
+AFFILIATE_ID = 'wtsr-20'
 
 
 def asin_to_html(line):
@@ -22,16 +22,19 @@ def asin_to_html(line):
     link_url = 'http://www.amazon.com/dp/{}/?tag={}'.format(
         asin, AFFILIATE_ID)
 
-    image_url = (
+    image_template = (
         '//ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN={}'
-        '&Format=_SL500_&ID=AsinImage&MarketPlace=US'
-        '&ServiceVersion=20070822&WS=1&tag={}').format(
-            asin, AFFILIATE_ID)
+        '&Format=_SL{}_&ID=AsinImage&MarketPlace=US'
+        '&ServiceVersion=20070822&WS=1&tag={}')
 
     return (
         '<a href="{}" class="amazon-thumbnail" target="_blank">'
-        '<img src="{}"></img>'
-        '</a>').format(link_url, image_url)
+        '<img src="{}" data-2x="{}"></img>'
+        '</a>').format(
+            link_url,
+            image_template.format(asin, '250', AFFILIATE_ID),
+            image_template.format(asin, '500', AFFILIATE_ID)
+        )
 
 
 def process_asin(content):
