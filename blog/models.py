@@ -99,7 +99,7 @@ class Article(models.Model):
 
     @property
     def canonical_url(self):
-        return "http://wheretostartreading.com/{}/".format(self.slug)
+        return "http://wheretostartreading.com/articles/{}/".format(self.slug)
 
     def get_absolute_url(self):
         return reverse('blog.views.article', args=[self.slug])
