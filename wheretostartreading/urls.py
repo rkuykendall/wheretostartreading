@@ -9,6 +9,7 @@ from django.http import HttpResponse
 
 from blog.models import Article
 
+
 class HomepageSitemap(Sitemap):
     priority = 0.5
     changefreq = 'daily'
@@ -21,7 +22,8 @@ class HomepageSitemap(Sitemap):
 
 sitemaps = {
     'blog': GenericSitemap({
-            'queryset': Article.objects.filter(published_at__lte=datetime.now()),
+            'queryset': Article.objects.filter(
+                published_at__lte=datetime.now()),
             'date_field': 'modified_at',
         }, priority=0.6),
     'homepage': HomepageSitemap,
