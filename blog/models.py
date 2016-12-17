@@ -102,14 +102,6 @@ class Article(models.Model):
         return content
 
     @property
-    def slug_image(self):
-        filepath = 'articles/{}.jpg'.format(self.slug)
-        if default_storage.exists('wheretostartreading/static/'+filepath):
-            return filepath
-        else:
-            return None
-
-    @property
     def canonical_url(self):
         return "http://wheretostartreading.com/articles/{}/".format(self.slug)
 
