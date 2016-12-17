@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-{% load staticfiles %}
 
 {% block head %}
 <title>{{article.title}}</title>
@@ -18,8 +17,8 @@
 <meta content="{{ article.published_at|date:"c" }}" property="article:published_time">
 <meta content="http://wheretostartreading.com/" property="article:author">
 
-{% if article.slug_image %}
-  <meta content="http://wheretostartreading.com{% static article.slug_image %}" property="og:image">
+{% if article.image %}
+  <meta content="{% article.image %}" property="og:image">
 {% endif %}
 {% endblock %}
 
@@ -29,7 +28,7 @@
   <div class="row">
   <div class="col-sm-12 col-md-8 col-md-offset-2">
     <div class="header">
-      <a href="/"><img src="{% static 'logo.png' %}" id="logo" /></a>
+      <a href="/"><img src="https://rkuykendall.github.io/wheretostartreading/logo.png" id="logo" /></a>
       <p>
         <a href="/">Where to Start Reading</a>
         &mdash; Simple comic guides, with links to books.
