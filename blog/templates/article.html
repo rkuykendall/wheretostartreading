@@ -5,17 +5,21 @@
 
 <meta name="description" content="{{article.description}}">
 <meta name="keywords" content="start,comics,reading,order,trade,tpb,amazon,buy">
+
 <meta name="author" content="Robert Kuykendall">
+<meta property="author" content="Robert Kuykendall" >
 
 <link rel="canonical" href="{{article.canonical_url}}">
 
-<meta content="article" property="og:type">
-<meta content="{{article.title}}" property="og:title">
-<meta content="{{article.canonical_url}}" property="og:url">
-<meta content="{{article.description}}" property="og:description">
+<meta property="og:type" content="article">
+<meta property="og:title" content="{{article.title}}">
+<meta property="og:url" content="{{article.canonical_url}}">
+<meta property="og:description" content="{{article.description}}">
 
-<meta content="{{ article.published_at|date:"c" }}" property="article:published_time">
-<meta content="http://wheretostartreading.com/" property="article:author">
+<meta property="fb:app_id" content="1204714829610198">
+
+<meta property="article:published_time" content="{{ article.published_at|date:"c" }}">
+<meta property="article:author" content="http://wheretostartreading.com/">
 
 {% if article.image %}
   <meta content="{{article.image}}" property="og:image">
