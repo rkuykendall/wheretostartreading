@@ -113,7 +113,6 @@ li {
 a.home_image {
   display: block;
   overflow: hidden;
-  height: 150px;
   margin-top: 15px;
   margin-bottom: 0px;
   border: 2px solid #1c222e;
