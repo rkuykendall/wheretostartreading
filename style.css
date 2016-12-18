@@ -101,10 +101,28 @@ li {
   margin-bottom: 5px;
 }
 
+.home_article {
+  margin-bottom: 15px;
+  border-bottom: 1px solid #EFF2F4;
+}
+
+a.home_image {
+  display: block;
+  overflow: hidden;
+  height: 150px;
+  margin-top: 15px;
+  margin-bottom: 0px;
+  border: 2px solid #1c222e;
+}
+
+.home_image img {
+  width: 100%;
+}
+
 @media (min-width: 992px) {
   .articles-wrapper {
-    margin-right: 10px;
-    padding-right: 10px;
+    margin-right: 0px;
+    padding-right: 30px;
     border-right: 1px solid #EFF2F4;
   }
 }
