@@ -27,8 +27,16 @@
 <div class="col-sm-12 col-md-8 col-lg-6 col-lg-offset-1">
   <div class="articles-wrapper">
   {% for article in articles %}
-    <h2><a href="{% url 'article' slug=article.slug %}">{{ article.title }}</a></h2>
-    <p>{{ article.description }}</p>
+    <div class="home_article">
+      {% if article.image %}
+        <a class="home_image" href="{% url 'article' slug=article.slug %}">
+          <img src="{{ article.image }}" id="{{ article.title }}" />
+        </a>
+      {% endif %}
+      <p>
+        <strong><a href="{% url 'article' slug=article.slug %}">{{ article.title_short }}</a></strong>
+        &mdash; {{ article.description }}</p>
+    </div>
   {% endfor %}
   </div>
 </div>
