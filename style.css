@@ -25,7 +25,7 @@ header {
   color: #ddd;
 }
 
-.metainfo + h1 {
+.page_article .metainfo {
   margin-bottom: -20px;
 }
 
