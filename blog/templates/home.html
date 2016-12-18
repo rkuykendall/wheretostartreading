@@ -35,7 +35,9 @@
       {% endif %}
       <p>
         <strong><a href="{% url 'article' slug=article.slug %}">{{ article.title_short }}</a></strong>
-        &mdash; {{ article.description }}</p>
+        &mdash; {{ article.description }}<br />
+        <span class="metainfo">Last updated {{ article.modified_at|date:"M d, Y" }}</span>
+      </p>
     </div>
   {% endfor %}
   </div>
