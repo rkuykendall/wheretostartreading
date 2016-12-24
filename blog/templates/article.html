@@ -4,7 +4,7 @@
 <title>{{article.title}}</title>
 
 <meta name="description" content="{{article.description}}">
-<meta name="keywords" content="start,comics,reading,order,trade,tpb,amazon,buy">
+<meta name="keywords" content="start,comics,reading,order,trade,paperbacks,chronological,tpb,amazon,buy">
 
 <link rel="canonical" href="{{article.canonical_url}}">
 
@@ -54,7 +54,13 @@
   <h1><a href="{% url 'article' slug=article.slug %}">{{ article.title }}</a></h1>
   <p>{{ article.content_html|safe }}</p>
 
-  <p>&mdash; Written by Robert Kuykendall. <a href="https://twitter.com/startcomics">Follow @startcomics</a> for more.</p>
+  <div class="article-footer">
+    <p>Written by Robert Kuykendall</p>
+    <p><a
+      class="twitter-follow-button"
+      href="https://twitter.com/startcomics"
+      data-size="large">Follow @StartComics</a></p>
+  </div>
 </div>
 </div>
 </div>
@@ -62,9 +68,7 @@
 <div class="disqus_wrapper">
 <div class="container">
 <div class="row">
-<div class="col-sm-12">
-  <h2>If you have any questions I am happy to answer them! &mdash;Robert</h2>
-
+<div class="col-sm-12 col-md-8 col-md-offset-2">
   <div id="disqus_thread"></div>
 
   <script>
