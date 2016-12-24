@@ -129,3 +129,8 @@ a.home_image {
     border-right: 1px solid #EFF2F4;
   }
 }
+
+.article-footer {
+  margin: 3em 0;
+  border-top: 1px solid #EFF2F4;
+}
