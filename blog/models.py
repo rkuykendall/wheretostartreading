@@ -1,7 +1,6 @@
 import markdown
 
 from django.core.cache import cache
-from django.core.files.storage import default_storage
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models.signals import post_save
@@ -74,6 +73,8 @@ class Article(models.Model):
         'If you like', max_length=255, null=True, blank=True)
     slug = models.SlugField(
         'Slug', unique=True, max_length=255)
+    credit = models.CharField(
+        'Credit', max_length=255, default='Written by Robert Kuykendall')
     description = models.CharField(
         'Description', max_length=160, null=True, blank=True)
     content = models.TextField('Content')
