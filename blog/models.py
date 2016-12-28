@@ -20,6 +20,7 @@ AFFILIATE_ID = 'wtsr-20'
 def asin_to_html(line):
     params = [s.strip() for s in line.split(' ')[1:]]
     asin = params.pop(0)
+    alt = ' '.join(params)
 
     link_url = 'http://www.amazon.com/dp/{}/?tag={}'.format(
         asin, AFFILIATE_ID)
@@ -31,11 +32,12 @@ def asin_to_html(line):
 
     return (
         '<a href="{}" class="amazon-thumbnail" target="_blank">'
-        '<img src="{}" data-2x="{}"></img>'
+        '<img src="{}" data-2x="{}" alt="{}" />'
         '</a>').format(
             link_url,
             image_template.format(asin, '250', AFFILIATE_ID),
-            image_template.format(asin, '500', AFFILIATE_ID)
+            image_template.format(asin, '500', AFFILIATE_ID),
+            alt,
         )
 
 
