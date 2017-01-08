@@ -134,3 +134,19 @@ a.home_image {
   margin: 3em 0;
   border-top: 1px solid #EFF2F4;
 }
+
+.article_image {
+  width: 100%;
+  border: 2px solid #1c222e;
+}
+
+.related_article {
+  display: block;
+  margin-bottom: 30px;
+}
+
+.related_article img {
+  width: 100%;
+  border: 2px solid #1c222e;
+  margin-bottom: 10px;
+}
