@@ -1,4 +1,5 @@
 import markdown
+from datetime import datetime
 
 from django.core.cache import cache
 from django.core.urlresolvers import reverse
@@ -103,6 +104,12 @@ class Article(models.Model):
             return markdown.markdown(content)
 
         return content
+
+    @property
+    def related(self, num=2):
+        return list(Article.objects.filter(
+            published_at__lte=datetime.now()).exclude(
+                id=self.id).order_by('?'))[:num]
 
     @property
     def canonical_url(self):
