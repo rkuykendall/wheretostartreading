@@ -1,3 +1,4 @@
+import re
 import markdown
 from datetime import datetime
 
@@ -16,42 +17,72 @@ MARKUP_CHOICES = [
 ]
 
 AFFILIATE_ID = 'wtsr-20'
+RE_ASIN = re.compile(r'ASIN[ ]([0-9X]{10})')
+TWITTER_AT = re.compile(r'@([A-Za-z0-9_]+)')
+OFFSITE_LINKS = re.compile(r'href=["\']http')
 
 
-def asin_to_html(line):
+def asin_to_url(asin):
+    return 'http://www.amazon.com/dp/{}/?tag={}'.format(
+        asin, AFFILIATE_ID)
+
+
+def asin_to_image(asin, size):
+    return (
+        '//ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN={}'
+        '&Format=_SL{}_&ID=AsinImage&MarketPlace=US'
+        '&ServiceVersion=20070822&WS=1&tag={}').format(
+        asin, size, AFFILIATE_ID)
+
+
+def asinline_to_thumbnail(line):
     params = [s.strip() for s in line.split(' ')[1:]]
     asin = params.pop(0)
     alt = ' '.join(params)
 
-    link_url = 'http://www.amazon.com/dp/{}/?tag={}'.format(
-        asin, AFFILIATE_ID)
-
-    image_template = (
-        '//ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN={}'
-        '&Format=_SL{}_&ID=AsinImage&MarketPlace=US'
-        '&ServiceVersion=20070822&WS=1&tag={}')
-
     return (
-        '<a href="{}" class="amazon-thumbnail" target="_blank">'
+        '<a href="{}" class="amazon-thumbnail">'
         '<img src="{}" data-2x="{}" alt="{}" />'
         '</a>').format(
-            link_url,
-            image_template.format(asin, '250', AFFILIATE_ID),
-            image_template.format(asin, '500', AFFILIATE_ID),
+            asin_to_url(asin),
+            asin_to_image(asin, 250),
+            asin_to_image(asin, 500),
             alt,
         )
 
 
-def process_asin(content):
-    processed = []
+def process_asin_thumbnails(content):
+    lines = content.split('\n')
 
-    for line in content.split('\n'):
-        if line[:4] == 'ASIN':
-            processed.append(asin_to_html(line))
-        else:
-            processed.append(line)
+    for i, line in enumerate(lines):
+        if RE_ASIN.match(line):
+            lines[i] = asinline_to_thumbnail(line)
 
-    return '\n'.join(processed)
+    return '\n'.join(lines)
+
+
+def process_asin_links(content):
+    content = RE_ASIN.sub(
+        lambda m: asin_to_url(m.group(1)),
+        content)
+
+    return content
+
+
+def process_twitter_links(content):
+    content = TWITTER_AT.sub(
+        lambda m: 'http://twitter.com/{}'.format(m.group(1)),
+        content)
+
+    return content
+
+
+def process_link_targets(content):
+    content = OFFSITE_LINKS.sub(
+        lambda m: 'target="_blank" {}'.format(m.group(0)),
+        content)
+
+    return content
 
 
 class Article(models.Model):
@@ -98,10 +129,15 @@ class Article(models.Model):
 
     @property
     def content_html(self):
-        content = process_asin(self.content)
+        content = self.content
+        content = process_asin_thumbnails(content)
+        content = process_asin_links(content)
+        content = process_twitter_links(content)
 
         if self.markup == 'markdown':
-            return markdown.markdown(content)
+            content = markdown.markdown(content)
+
+        content = process_link_targets(content)
 
         return content
 
