@@ -115,11 +115,11 @@ a.home_image {
   overflow: hidden;
   margin-top: 15px;
   margin-bottom: 0px;
-  border: 2px solid #1c222e;
 }
 
 .home_image img {
   width: 100%;
+  border: 2px solid #1c222e;
 }
 
 @media (min-width: 992px) {
