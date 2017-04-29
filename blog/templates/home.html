@@ -71,6 +71,15 @@
     data-link-color="#0090FF"
     data-border-color="#EFF2F4"
     >Tweets by StartComics</a>
+
+  <h2>All Articles</h2>
+  {% for article in articles|dictsort:"title_short" %}
+    <p>
+      <strong><a href="{% url 'article' slug=article.slug %}">{{ article.title_short }}</a></strong>
+      <span class="metainfo">{{ article.modified_at|date:"M, Y" }}</span>
+    </p>
+  {% endfor %}
+
 </div>
 </div>
 </div>
