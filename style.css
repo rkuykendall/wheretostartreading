@@ -150,3 +150,11 @@ a.home_image {
   border: 2px solid #1c222e;
   margin-bottom: 10px;
 }
+
+#all-sidebar {
+  color: #999;
+  padding-top: 90px;
+}
+#all-sidebar h4 {
+  font-weight: normal;
+}
