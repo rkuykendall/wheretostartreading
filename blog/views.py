@@ -10,5 +10,7 @@ def home(request):
 
 
 def article(request, slug):
+    articles = Article.objects.filter(published_at__lte=datetime.now())
     article = Article.objects.get(slug=slug)
-    return render(request, 'article.html', {'article': article})
+    return render(
+        request, 'article.html', {'article': article, 'articles': articles})

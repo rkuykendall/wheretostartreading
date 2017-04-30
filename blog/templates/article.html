@@ -34,7 +34,7 @@
 <header>
   <div class="container">
   <div class="row">
-  <div class="col-sm-12 col-md-8 col-md-offset-2">
+  <div class="col-sm-12 col-md-8 col-md-offset-1">
     <div class="header">
       <a href="/"><img src="https://rkuykendall.github.io/wheretostartreading/logo.png" alt="Where to Start Reading" id="logo" /></a>
       <p>
@@ -49,7 +49,7 @@
 
 <div class="page_article container">
 <div class="row">
-<div class="col-sm-12 col-md-8 col-md-offset-2">
+<div class="col-sm-12 col-md-8 col-md-offset-1">
   <p class="metainfo">Last updated {{ article.modified_at|date:"M d, Y" }}</p>
   <h1><a href="{% url 'article' slug=article.slug %}">{{ article.title }}</a></h1>
 
@@ -67,11 +67,20 @@
       data-size="large">Follow @StartComics</a></p>
   </div>
 </div>
+<div class="col-sm-12 col-md-3" id="all-sidebar">
+  <h4>All Articles</h4>
+  {% for article in articles|dictsort:"title_short" %}
+    <p>
+      <strong><a href="{% url 'article' slug=article.slug %}">{{ article.title_short }}</a></strong>
+      <span class="metainfo">{{ article.modified_at|date:"M, Y" }}</span>
+    </p>
+  {% endfor %}
+</div>
 </div>
 <div class="row">
-<div class="col-md-2"></div>
+<div class="col-md-1"></div>
 {% for related in article.related %}
-  <div class="col-md-4">
+  <div class="col-md-2">
     <a class="related_article" href="{% url 'article' slug=related.slug %}">
       <img src="{{ related.image }}" alt="{{ related.title }}" />
       {{ related.title }}
@@ -84,7 +93,7 @@
 <div class="disqus_wrapper">
 <div class="container">
 <div class="row">
-<div class="col-sm-12 col-md-8 col-md-offset-2">
+<div class="col-sm-12 col-md-8 col-md-offset-1">
   <div id="disqus_thread"></div>
 
   <script>

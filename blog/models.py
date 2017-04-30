@@ -142,7 +142,7 @@ class Article(models.Model):
         return content
 
     @property
-    def related(self, num=2):
+    def related(self, num=4):
         return list(Article.objects.filter(
             published_at__lte=datetime.now()).exclude(
                 id=self.id).order_by('?'))[:num]
