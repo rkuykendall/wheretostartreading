@@ -93,7 +93,7 @@
   <div class="col-md-2">
     <a class="related_article" href="{% url 'article' slug=related.slug %}">
       <img src="{{ related.image }}" alt="{{ related.title }}" />
-      {{ related.title }}
+      {{ related.title_short }}
     </a>
   </div>
 {% endfor %}
