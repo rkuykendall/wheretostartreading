@@ -29,6 +29,10 @@ header {
   margin-bottom: -20px;
 }
 
+.page_article img {
+    max-width: 100%;
+}
+
 header p,
 header p a {
   font-weight: normal;
