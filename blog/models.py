@@ -112,6 +112,8 @@ class Article(models.Model):
     description = models.CharField(
         'Description', max_length=160, null=True, blank=True)
     content = models.TextField('Content')
+    disqus_src = models.TextField(
+        'Disqus override source', null=True, blank=True)
 
     class Meta:
         ordering = ['-published_at', '-modified_at']
