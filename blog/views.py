@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from django.http import Http404
 from django.shortcuts import render
 from .models import Article
 
@@ -10,7 +11,11 @@ def home(request):
 
 
 def article(request, slug):
-    articles = Article.objects.filter(published_at__lte=datetime.now())
-    article = Article.objects.get(slug=slug)
+    try:
+        articles = Article.objects.filter(published_at__lte=datetime.now())
+        article = Article.objects.get(slug=slug)
+    except Article.DoesNotExist:
+        raise Http404("Poll does not exist")
+
     return render(
         request, 'article.html', {'article': article, 'articles': articles})
