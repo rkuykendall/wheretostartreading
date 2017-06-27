@@ -42,6 +42,7 @@ header p a {
 }
 
 header p a,
+header p a:link,
 header p a:hover {
   color: #4DDD74;
 }
