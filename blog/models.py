@@ -103,8 +103,6 @@ class Article(models.Model):
         'Short title', max_length=255, null=True, blank=True)
     image = models.CharField(
         'Image', max_length=255, null=True, blank=True)
-    if_you_like = models.CharField(
-        'If you like', max_length=255, null=True, blank=True)
     slug = models.SlugField(
         'Slug', unique=True, max_length=255)
     credit = models.CharField(
