@@ -6,7 +6,7 @@ from .models import Article
 
 
 def home(request):
-    articles = Article.objects.filter(published_at__lte=datetime.now())
+    articles = Article.objects.filter(published_at__lte=datetime.now()).order_by('-modified_at')
     return render(request, 'home.html', {'articles': articles})
 
 
