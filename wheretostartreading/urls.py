@@ -20,6 +20,7 @@ class HomepageSitemap(Sitemap):
     def location(self, item):
         return reverse(item)
 
+
 sitemaps = {
     'blog': GenericSitemap({
             'queryset': Article.objects.filter(

@@ -22,9 +22,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
+
+PROD = (os.environ.get('PROD', 'True') == 'True')
+
 ALLOWED_HOSTS = ['*']
 
-SECURE_SSL_REDIRECT = True
+SECURE_SSL_REDIRECT = PROD
 
 
 # Application definition
