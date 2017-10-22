@@ -20,6 +20,7 @@ AFFILIATE_ID = 'wtsr-20'
 RE_ASIN = re.compile(r'ASIN[ ]([0-9X]{10})')
 TWITTER_AT = re.compile(r'@([A-Za-z0-9_]+)')
 OFFSITE_LINKS = re.compile(r'href=["\']http')
+ASIN_LINKS = re.compile(r'href="http://www.amazon.com/dp/([0-9X]{10})')
 
 
 def asin_to_url(asin):
@@ -41,11 +42,10 @@ def asinline_to_thumbnail(line):
     alt = ' '.join(params)
 
     return (
-        '<a href="{url}" onClick="trackAsinClick(\'{asin}\')" class="amazon-thumbnail">'
+        '<a href="{url}" class="amazon-thumbnail">'
         '<img src="{src}" data-2x="{src2x}" alt="{alt}" />'
         '</a>').format(
             url=asin_to_url(asin),
-            asin=asin,
             src=asin_to_image(asin, 250),
             src2x=asin_to_image(asin, 500),
             alt=alt,
@@ -81,6 +81,14 @@ def process_twitter_links(content):
 def process_link_targets(content):
     content = OFFSITE_LINKS.sub(
         lambda m: 'target="_blank" {}'.format(m.group(0)),
+        content)
+
+    return content
+
+
+def process_asin_tracking(content):
+    content = ASIN_LINKS.sub(
+        lambda m: 'onClick="trackAsinClick(\'{}\')" {}'.format(m.group(1), m.group(0)),
         content)
 
     return content
@@ -139,6 +147,7 @@ class Article(models.Model):
             content = markdown.markdown(content)
 
         content = process_link_targets(content)
+        content = process_asin_tracking(content)
 
         return content
 
