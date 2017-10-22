@@ -19,6 +19,19 @@
           ga('send', 'pageview');
         </script>
         <script>
+          /**
+            * Function that tracks a click on an outbound link in Analytics.
+            * This function takes a valid URL string as an argument, and uses that URL string
+            * as the event label. Setting the transport method to 'beacon' lets the hit be sent
+            * using 'navigator.sendBeacon' in browser that support it.
+            */
+          var trackAsinClick = function(asin) {
+             ga('send', 'event', 'asin', 'click', asin, {
+               'transport': 'beacon',
+             });
+          }
+        </script>
+        <script>
           // Replaces 250px product images with 500px product images if available
           window.onload = function() {
             if (window.devicePixelRatio > 1) {

@@ -41,13 +41,14 @@ def asinline_to_thumbnail(line):
     alt = ' '.join(params)
 
     return (
-        '<a href="{}" class="amazon-thumbnail">'
-        '<img src="{}" data-2x="{}" alt="{}" />'
+        '<a href="{url}" onClick="trackAsinClick(\'{asin}\')" class="amazon-thumbnail">'
+        '<img src="{src}" data-2x="{src2x}" alt="{alt}" />'
         '</a>').format(
-            asin_to_url(asin),
-            asin_to_image(asin, 250),
-            asin_to_image(asin, 500),
-            alt,
+            url=asin_to_url(asin),
+            asin=asin,
+            src=asin_to_image(asin, 250),
+            src2x=asin_to_image(asin, 500),
+            alt=alt,
         )
 
 
