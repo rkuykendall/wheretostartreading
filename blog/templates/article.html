@@ -34,7 +34,7 @@
 <header>
   <div class="container">
   <div class="row">
-  <div class="col-sm-12 col-md-8 col-md-offset-1">
+  <div class="col-sm-12 col-md-8 offset-md-1">
     <div class="header">
       <a href="/"><img src="https://rkuykendall.github.io/wheretostartreading/logo.png" alt="Where to Start Reading" id="logo" /></a>
       <p>
@@ -49,13 +49,13 @@
 
 <div class="page_article container">
 <div class="row">
-<div class="col-sm-12 col-md-10 col-md-offset-1">
+<div class="col-sm-12 col-md-10 offset-md-1">
   <p class="metainfo">Last updated {{ article.modified_at|date:"M d, Y" }}</p>
   <h1><a href="{% url 'article' slug=article.slug %}">{{ article.title }}</a></h1>
 </div>
 </div>
 <div class="row">
-<div class="col-sm-12 col-md-8 col-md-offset-1">
+<div class="col-sm-12 col-md-8 offset-md-1">
   {% if article.image %}
     <img class="article_image" src="{{ article.image }}" alt="{{ article.title }}" />
   {% endif %}
@@ -70,14 +70,14 @@
       data-size="large">Follow @StartComics</a></p>
   </div>
 </div>
-<div class="col-sm-12 visible-sm visible-xs" id="all-sidebar">
+<div class="col-sm-12 d-md-none" id="all-sidebar">
   <p><strong>All Articles
   {% for article in articles|dictsort:"title_short" %}
     <a href="{% url 'article' slug=article.slug %}">{{ article.title_short }}</a>,
   {% endfor %}
   </strong></p>
 </div>
-<div class="col-sm-12 col-md-3 visible-md visible-lg" id="all-sidebar">
+<div class="col-sm-12 col-md-3 d-none d-md-block" id="all-sidebar">
   <h4>All Articles</h4>
   {% for article in articles|dictsort:"title_short" %}
     <p>
@@ -87,7 +87,7 @@
   {% endfor %}
 </div>
 </div>
-<div class="row visible-md visible-lg">
+<div class="row d-md-none">
 <div class="col-md-1"></div>
 {% for related in article.related %}
   <div class="col-md-2">
@@ -103,7 +103,7 @@
 <div class="disqus_wrapper">
 <div class="container">
 <div class="row">
-<div class="col-sm-12 col-md-8 col-md-offset-1">
+<div class="col-sm-12 col-md-8 offset-md-1">
   <div id="disqus_thread"></div>
 
   {% if article.disqus_src %}
