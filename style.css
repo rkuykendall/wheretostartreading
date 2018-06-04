@@ -5,6 +5,10 @@ body {
   font-size: 17px;
 }
 
+p {
+  margin-top: 17px;
+}
+
 header {
   background-color: #0C1B2D;
   border-bottom: 1px solid #000;
@@ -26,7 +30,8 @@ header {
 }
 
 .page_article .metainfo {
-  margin-bottom: -20px;
+  margin-bottom: -5px;
+  margin-top: 20px;
 }
 
 .page_article img {
@@ -39,6 +44,7 @@ header p a {
   text-decoration: none;
   font-size: 16px;
   color: #8B96A5;
+  margin-bottom: 0px;
 }
 
 header p a,
@@ -50,6 +56,7 @@ header p a:hover {
 h1, h2, h3 {
   font-weight: 400;
   font-family: 'Noto Serif', serif;
+  margin-bottom: 20px;
 }
 
 h1 a {
