@@ -42,7 +42,7 @@ def asinline_to_thumbnail(line, idx):
     alt = ' '.join(params)
 
     return ('''
-<a href="{url}">
+<a href="{url}" title="{alt}">
 <div class="card card-amazon" style="width: 10rem;">
   <img class="card-img-top" src="{src}" data-2x="{src2x}" alt="{alt}">
   <div class="card-asin">#{idx}: {alt}</div>
