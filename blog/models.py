@@ -36,7 +36,7 @@ def asin_to_image(asin, size):
         asin, size, AFFILIATE_ID)
 
 
-def asinline_to_thumbnail(line):
+def asinline_to_thumbnail(line, idx):
     params = [s.strip() for s in line.split(' ')[1:]]
     asin = params.pop(0)
     alt = ' '.join(params)
@@ -45,10 +45,11 @@ def asinline_to_thumbnail(line):
 <a href="{url}">
 <div class="card card-amazon" style="width: 10rem;">
   <img class="card-img-top" src="{src}" data-2x="{src2x}" alt="{alt}">
-  <div class="card-asin">{alt}</div>
+  <div class="card-asin">#{idx}: {alt}</div>
 </div>
 </a>
     '''.format(
+        idx=idx,
         url=asin_to_url(asin),
         src=asin_to_image(asin, 250),
         src2x=asin_to_image(asin, 500),
@@ -60,14 +61,17 @@ def process_asin_thumbnails(content):
     lines = content.split('\n')
     new_lines = []
     deck_started = False
+    idx = 1
 
     for line in lines:
         if RE_ASIN.match(line):
             if not deck_started:
+                idx = 1
                 new_lines.append('<div class="card-deck">')
                 deck_started = True
 
-            new_lines.append(asinline_to_thumbnail(line))
+            new_lines.append(asinline_to_thumbnail(line, idx))
+            idx += 1
 
         else:
             if deck_started:
