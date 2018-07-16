@@ -41,25 +41,45 @@ def asinline_to_thumbnail(line):
     asin = params.pop(0)
     alt = ' '.join(params)
 
-    return (
-        '<a href="{url}" class="amazon-thumbnail">'
-        '<img src="{src}" data-2x="{src2x}" alt="{alt}" />'
-        '</a>').format(
-            url=asin_to_url(asin),
-            src=asin_to_image(asin, 250),
-            src2x=asin_to_image(asin, 500),
-            alt=alt,
-        )
+    return ('''
+<a href="{url}">
+<div class="card card-amazon" style="width: 10rem;">
+  <img class="card-img-top" src="{src}" data-2x="{src2x}" alt="{alt}">
+  <div class="card-asin">{alt}</div>
+</div>
+</a>
+    '''.format(
+        url=asin_to_url(asin),
+        src=asin_to_image(asin, 250),
+        src2x=asin_to_image(asin, 500),
+        alt=alt,
+    ))
 
 
 def process_asin_thumbnails(content):
     lines = content.split('\n')
+    new_lines = []
+    deck_started = False
 
-    for i, line in enumerate(lines):
+    for line in lines:
         if RE_ASIN.match(line):
-            lines[i] = asinline_to_thumbnail(line)
+            if not deck_started:
+                new_lines.append('<div class="card-deck">')
+                deck_started = True
 
-    return '\n'.join(lines)
+            new_lines.append(asinline_to_thumbnail(line))
+
+        else:
+            if deck_started:
+                new_lines.append('</div>')
+                deck_started = False
+
+            new_lines.append(line)
+
+    if deck_started:
+        new_lines.append('</div>')
+
+    return '\n'.join(new_lines)
 
 
 def process_asin_links(content):
