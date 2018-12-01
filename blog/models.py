@@ -18,6 +18,7 @@ MARKUP_CHOICES = [
 
 AFFILIATE_ID = 'wtsr-20'
 RE_ASIN = re.compile(r'ASIN[ ]([0-9X]{10})')
+RE_ASINP = re.compile(r'<ASINP[ ]([0-9X]{10})[ ]?([^>]*)>[ ](.*)')
 TWITTER_AT = re.compile(r'@([A-Za-z0-9_]+)')
 OFFSITE_LINKS = re.compile(r'href=["\']http')
 ASIN_LINKS = re.compile(r'href="http://www.amazon.com/dp/([0-9X]{10})')
@@ -57,6 +58,24 @@ def asinline_to_thumbnail(line, idx):
     ))
 
 
+def asinpline_to_paragraph(line):
+    result = RE_ASINP.match(line)
+    asin = result.group(1)
+    alt = result.group(2)
+    text = result.group(3)
+
+    return ('''
+<a href="{url}" title="{alt}">
+  <img class="asin-p-img" src="{src}" data-2x="{src2x}" alt="{alt}">
+</a>{text}'''.format(
+        url=asin_to_url(asin),
+        src=asin_to_image(asin, 250),
+        src2x=asin_to_image(asin, 500),
+        alt=alt,
+        text=text,
+    ))
+
+
 def process_asin_thumbnails(content):
     lines = content.split('\n')
     new_lines = []
@@ -86,6 +105,14 @@ def process_asin_thumbnails(content):
     return '\n'.join(new_lines)
 
 
+def process_asin_paragraphs(content):
+    return '\n'.join([
+        line if not RE_ASINP.match(line)
+        else asinpline_to_paragraph(line)
+        for line in content.split('\n')
+    ])
+
+
 def process_asin_links(content):
     content = RE_ASIN.sub(
         lambda m: asin_to_url(m.group(1)),
@@ -112,8 +139,8 @@ def process_link_targets(content):
 
 def process_asin_tracking(content):
     content = ASIN_LINKS.sub(
-        lambda m: 'onClick="trackAsinClick(\'{}\')" {}'.format(m.group(1), m.group(0)),
-        content)
+        lambda m: 'onClick="trackAsinClick(\'{}\')" {}'.format(
+            m.group(1), m.group(0)), content)
 
     return content
 
@@ -164,6 +191,7 @@ class Article(models.Model):
     def content_html(self):
         content = self.content
         content = process_asin_thumbnails(content)
+        content = process_asin_paragraphs(content)
         content = process_asin_links(content)
         content = process_twitter_links(content)
 
