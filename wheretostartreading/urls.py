@@ -39,7 +39,7 @@ urlpatterns = [
         (
             "User-agent: * \n"
             "Disallow: \n"
-            "Sitemap: http://wheretostartreading.com/sitemap.xml"
+            "Sitemap: https://wheretostartreading.com/sitemap.xml"
         ),
         content_type="text/plain"))
 ]

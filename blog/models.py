@@ -21,11 +21,11 @@ RE_ASIN = re.compile(r'ASIN[ ]([0-9X]{10})')
 RE_ASINP = re.compile(r'<ASINP[ ]([0-9X]{10})[ ]?([^>]*)>[ ](.*)')
 TWITTER_AT = re.compile(r'@([A-Za-z0-9_]+)')
 OFFSITE_LINKS = re.compile(r'href=["\']http')
-ASIN_LINKS = re.compile(r'href="http://www.amazon.com/dp/([0-9X]{10})')
+ASIN_LINKS = re.compile(r'href="https://www.amazon.com/dp/([0-9X]{10})')
 
 
 def asin_to_url(asin):
-    return 'http://www.amazon.com/dp/{}/?tag={}'.format(
+    return 'https://www.amazon.com/dp/{}/?tag={}'.format(
         asin, AFFILIATE_ID)
 
 
@@ -123,7 +123,7 @@ def process_asin_links(content):
 
 def process_twitter_links(content):
     content = TWITTER_AT.sub(
-        lambda m: 'http://twitter.com/{}'.format(m.group(1)),
+        lambda m: 'https://twitter.com/{}'.format(m.group(1)),
         content)
 
     return content
@@ -211,7 +211,7 @@ class Article(models.Model):
 
     @property
     def canonical_url(self):
-        return "http://wheretostartreading.com/articles/{}/".format(self.slug)
+        return "https://wheretostartreading.com/articles/{}/".format(self.slug)
 
     def get_absolute_url(self):
         return reverse('blog.views.article', args=[self.slug])
