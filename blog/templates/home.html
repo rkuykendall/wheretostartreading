@@ -26,22 +26,26 @@
 <div class="row">
 <div class="col-sm-12 col-md-8 col-lg-6 offset-lg-1">
   <div class="articles-wrapper">
-  {% for article in articles %}
-    <div class="home_article">
-      {% if article.image %}
-        <a class="home_image" href="{% url 'article' slug=article.slug %}">
-          <img src="{{ article.image }}" alt="{{ article.title }}" />
-        </a>
-      {% endif %}
-      <p>
-        <strong><a href="{% url 'article' slug=article.slug %}">{{ article.title_short }}</a></strong>
-        &mdash; {{ article.description }}<br />
-        <span class="metainfo">Last updated {{ article.modified_at|date:"M d, Y" }}</span>
-      </p>
-    </div>
+  <h2>Popular articles</h2>
+
+  {% for article in articles_popular %}
+    {% include 'home_article.html' with article=article %}
+  {% endfor %}
+
+  <h2>Recently published</h2>
+
+  {% for article in articles_published %}
+    {% include 'home_article.html' with article=article %}
+  {% endfor %}
+
+  <h2>All others, by recently updated</h2>
+
+  {% for article in articles_updated %}
+    {% include 'home_article.html' with article=article %}
   {% endfor %}
   </div>
 </div>
+
 <div class="col-md-4 d-none d-md-block">
   <h2>Comics can be confusing.</h2>
   <p>Sometimes you just need a friend to tell you where to start.

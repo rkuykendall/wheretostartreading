@@ -1,0 +1,12 @@
+<div class="home_article">
+  {% if article.image %}
+    <a class="home_image" href="{% url 'article' slug=article.slug %}">
+      <img src="{{ article.image }}" alt="{{ article.title }}" />
+    </a>
+  {% endif %}
+  <p>
+    <strong><a href="{% url 'article' slug=article.slug %}">{{ article.title_short }}</a></strong>
+    &mdash; {{ article.description }}<br />
+    <span class="metainfo">Last updated {{ article.modified_at|date:"M d, Y" }}</span>
+  </p>
+</div>
