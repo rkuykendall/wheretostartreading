@@ -26,13 +26,11 @@ def home(request):
     articles_popular = [a for a in articles if a.slug in POPULAR]
     articles = [a for a in articles if a.slug not in POPULAR]
 
-    articles_published = articles[:3]
-    articles = articles[3:]
+    articles_published = articles[:5]
+    articles = articles[5:]
 
     articles_modified = sorted(
         articles, key=lambda x: x.modified_at, reverse=True)
-
-    articles = [a for a in articles if a.slug not in articles_popular]
 
     return render(request, 'home.html', {
         'articles': all,
