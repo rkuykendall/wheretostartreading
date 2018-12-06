@@ -21,11 +21,13 @@ def home(request):
         .order_by('-published_at') \
         .all()
 
+    all = articles
+
     articles_popular = [a for a in articles if a.slug in POPULAR]
     articles = [a for a in articles if a.slug not in POPULAR]
 
-    articles_published = articles[:5]
-    articles = articles[5:]
+    articles_published = articles[:3]
+    articles = articles[3:]
 
     articles_modified = sorted(
         articles, key=lambda x: x.modified_at, reverse=True)
@@ -33,6 +35,7 @@ def home(request):
     articles = [a for a in articles if a.slug not in articles_popular]
 
     return render(request, 'home.html', {
+        'articles': all,
         'articles_popular': articles_popular,
         'articles_published': articles_published,
         'articles_modified': articles_modified,
