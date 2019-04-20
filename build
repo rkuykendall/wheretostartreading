@@ -1,0 +1,8 @@
+docker build -t wtsr_backend .
+docker rm wtsr_back
+sudo docker run \
+  -e DJANGO_SECRET_KEY="lol" \
+  -e PROD="False" \
+  -p 8000:8000 \
+  --name wtsr_back \
+  wtsr_backend

@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Where to Start Reading</title>
+<meta name="description" content="Simple comic guides, with links to books.">
+{% endblock %}
+
+{% block content %}
+<header>
+  <div class="container">
+  <div class="row">
+  <div class="col-md-12 col-lg-10 offset-lg-1">
+    <div class="header">
+      <a href="/"><img src="https://rkuykendall.github.io/wheretostartreading/logo.png" alt="Where to Start Reading" id="logo" /></a>
+      <p>
+        <a href="/">Where to Start Reading</a>
+        &mdash; Simple comic guides, with links to books.
+      </p>
+    </div>
+  </div>
+  </div>
+  </div>
+</header>
+
+<div class="container">
+<div class="row">
+<div class="col-sm-12 col-md-8 col-lg-10 offset-lg-1">
+  <div class="articles-wrapper">
+  <h2>All articles</h2>
+
+  {% for article in articles|dictsort:"title_short" %}
+    {% include 'sidebar_article.html' with article=article %}
+  {% endfor %}
+  </div>
+</div>
+</div>
+</div>
+{% endblock %}

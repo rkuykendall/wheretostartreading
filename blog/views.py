@@ -15,6 +15,14 @@ POPULAR = [
 ]
 
 
+def all(request):
+    articles = Article.objects \
+        .filter(published_at__lte=datetime.now()) \
+        .all()
+
+    return render(request, 'all.html', { 'articles': articles })
+
+
 def home(request):
     articles = Article.objects \
         .filter(published_at__lte=datetime.now()) \

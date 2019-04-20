@@ -1,0 +1,4 @@
+<p>
+  <strong><a href="{% url 'article' slug=article.slug %}">{{ article.title_short }}</a></strong>
+  <span class="metainfo">{{ article.modified_at|date:"M, Y" }}</span>
+</p>
