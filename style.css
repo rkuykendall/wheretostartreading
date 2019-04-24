@@ -175,3 +175,40 @@ a.home_image {
   font-weight: normal;
   margin-top: 0px;
 }
+
+.card.card-amazon {
+  margin-bottom: 15px;
+  border: none;
+}
+
+.card-amazon .card-img-top {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  outline: 2px solid #0090FF;
+  border-radius: 0px;
+}
+
+.card-asin {
+  padding: 5px;
+  text-overflow: ellipsis;
+  padding-left: 15px;
+  white-space: nowrap;
+  overflow: hidden;
+  font-size: 14px;
+  background-image: url(http://g-ec2.images-amazon.com/images/G/01/associates/mec/logo.png);
+  background-repeat: no-repeat;
+  background-position: 0px 10px;
+}
+
+.page_article h2,
+.page_article p {
+  clear: left;
+}
+
+.asin-p-img {
+  float: left;
+  height: 250px;
+  border: 1px solid black;
+  margin: 5px 15px 15px 0px;
+}
