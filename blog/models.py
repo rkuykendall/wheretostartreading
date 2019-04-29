@@ -21,7 +21,7 @@ RE_ASIN = re.compile(r'ASIN[ ]([0-9X]{10})')
 RE_ASINP = re.compile(r'<ASINP[ ]([0-9X]{10})[ ]?([^>]*)>[ ](.*)')
 TWITTER_AT = re.compile(r'@([A-Za-z0-9_]+)')
 OFFSITE_LINKS = re.compile(r'href=["\']http')
-ASIN_LINKS = re.compile(r'href="https://www.amazon.com/dp/([0-9X]{10})')
+ASIN_LINKS = re.compile(r'href="https://www.amazon.com/dp/([0-9A-Z]{10})')
 
 
 def asin_to_url(asin):
