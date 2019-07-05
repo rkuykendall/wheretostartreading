@@ -45,7 +45,10 @@ def asinline_to_thumbnail(line, idx):
     return ('''
 <a href="{url}" title="{alt}">
 <div class="card card-amazon" style="width: 10rem;">
-  <img class="card-img-top" src="{src}" data-2x="{src2x}" alt="{alt}">
+  <div class="blocked-wrapper">
+    <p class="blocked-message">Amazon cover images may be blocked by Ad Block</p>
+    <img class="card-img-top" src="{src}" data-2x="{src2x}" alt="{alt}" />
+  </div>
   <div class="card-asin">#{idx}: {alt}</div>
 </div>
 </a>
