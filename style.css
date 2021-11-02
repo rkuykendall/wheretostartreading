@@ -17,7 +17,7 @@ header {
 .header {
   display: flex;
   align-items: center;
-  padding: 10px 0px;
+  padding: 10px 0;
 }
 
 #logo {
@@ -65,7 +65,7 @@ h1 a {
   margin-bottom: 15px;
   line-height: 1.3em;
   font-weight: normal;
-  padding: 1px 0px;
+  padding: 1px 0;
 }
 
 h1 a:hover {
@@ -86,7 +86,7 @@ h3 {
 }
 
 h2.subtitle {
-  margin-top: 0px;
+  margin-top: 0;
   margin-bottom: 2em;
 }
 
@@ -130,7 +130,7 @@ a.home_image {
   display: block;
   overflow: hidden;
   margin-top: 15px;
-  margin-bottom: 0px;
+  margin-bottom: 0;
 }
 
 .home_image img {
@@ -140,7 +140,7 @@ a.home_image {
 
 @media (min-width: 992px) {
   .articles-wrapper {
-    margin-right: 0px;
+    margin-right: 0;
     padding-right: 30px;
     border-right: 1px solid #EFF2F4;
   }
@@ -173,7 +173,7 @@ a.home_image {
 
 #all-sidebar h4 {
   font-weight: normal;
-  margin-top: 0px;
+  margin-top: 0;
 }
 
 .card.card-amazon {
@@ -186,7 +186,7 @@ a.home_image {
   height: 250px;
   object-fit: cover;
   outline: 2px solid #0090FF;
-  border-radius: 0px;
+  border-radius: 0;
 }
 
 .card-asin {
@@ -198,7 +198,8 @@ a.home_image {
   font-size: 14px;
   background-image: url(//rkuykendall.github.io/wheretostartreading/amazon-logo.png);
   background-repeat: no-repeat;
-  background-position: 0px 10px;
+  background-position: 0 11px;
+  background-size: 12px;
 }
 
 .page_article h2,
@@ -210,5 +211,5 @@ a.home_image {
   float: left;
   height: 250px;
   border: 1px solid black;
-  margin: 5px 15px 15px 0px;
+  margin: 5px 15px 15px 0;
 }
