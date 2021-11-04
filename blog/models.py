@@ -68,9 +68,15 @@ def asinpline_to_paragraph(line):
     text = result.group(3)
 
     return ('''
-<a href="{url}" title="{alt}">
-  <img class="asin-p-img" src="{src}" data-2x="{src2x}" alt="{alt}">
-</a>{text}'''.format(
+<div class="asin-p">
+  <div class="asin-p-left">
+    <a href="{url}" title="{alt}">
+      <img class="asin-p-img" src="{src}" data-2x="{src2x}" alt="{alt}">
+    </a>
+  </div>
+  <div class="asin-p-right"><p>{text}</p></div>
+</div>
+'''.format(
         url=asin_to_url(asin),
         src=asin_to_image(asin, 250),
         src2x=asin_to_image(asin, 500),
@@ -153,6 +159,7 @@ class Article(models.Model):
     modified_at = models.DateTimeField(auto_now=True)
     published_at = models.DateTimeField(null=True, blank=True)
     history = HistoricalRecords()
+    featured = models.BooleanField(default=False)
 
     markup = models.CharField(
         max_length=10,

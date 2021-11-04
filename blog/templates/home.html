@@ -31,7 +31,7 @@
     <p><a href="/all/">All articles</a></p>
   </div>
 
-  <h2>Popular articles</h2>
+  <h2>Featured articles</h2>
 
   {% for article in articles_popular %}
     {% include 'home_article.html' with article=article %}
@@ -67,11 +67,6 @@
     </script><noscript>[spam protected email]</noscript>,
     <a href="https://twitter.com/startcomics" target="_blank">tweet</a>,
     or comment on an article.</p>
-
-  <p><a
-    class="twitter-follow-button"
-    href="https://twitter.com/startcomics"
-    data-size="large">Follow @StartComics</a></p>
 
   <h3>All Articles</h3>
   {% for article in articles|dictsort:"title_short" %}

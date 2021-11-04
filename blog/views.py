@@ -2,17 +2,8 @@ from datetime import datetime
 
 from django.http import Http404
 from django.shortcuts import render
+
 from .models import Article
-
-
-POPULAR = [
-    'spider-man',
-    'spider-gwen',
-    'iron-man',
-    'civil-war',
-    'secret-wars',
-    'spider-verse',
-]
 
 
 def all(request):
@@ -31,8 +22,8 @@ def home(request):
 
     all = articles
 
-    articles_popular = [a for a in articles if a.slug in POPULAR]
-    articles = [a for a in articles if a.slug not in POPULAR]
+    articles_popular = [a for a in articles if a.featured]
+    articles = [a for a in articles if not a.featured]
 
     articles_published = articles[:5]
     articles = articles[5:]
