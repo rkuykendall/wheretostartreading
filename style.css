@@ -26,11 +26,11 @@ header {
 }
 
 .metainfo {
-  color: #ddd;
+  color: #999;
 }
 
 .page_article .metainfo {
-  margin-bottom: -5px;
+  margin-bottom: 0;
   margin-top: 20px;
 }
 
@@ -207,8 +207,19 @@ a.home_image {
   clear: left;
 }
 
+.asin-p {
+  display: flex;
+}
+
+.asin-p-left {
+  flex: none;
+}
+
+.asin-p-right p {
+  margin-top: 0;
+}
+
 .asin-p-img {
-  float: left;
   height: 250px;
   border: 1px solid black;
   margin: 5px 15px 15px 0;
