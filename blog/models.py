@@ -37,28 +37,34 @@ def asin_to_image(asin, size):
         asin, size, AFFILIATE_ID)
 
 
-def asinline_to_thumbnail(line, idx):
-    params = [s.strip() for s in line.split(' ')[1:]]
-    asin = params.pop(0)
-    alt = ' '.join(params)
+def get_thumbnail (asin, alt, idx=None):
+    asin_formatted = '#{idx}: '.format(idx=idx) if idx else ''
 
     return ('''
-<a href="{url}" title="{alt}">
-<div class="card card-amazon" style="width: 10rem;">
-  <div class="blocked-wrapper">
-    <p class="blocked-message">Amazon cover images may be blocked by Ad Block</p>
-    <img class="card-img-top" src="{src}" data-2x="{src2x}" alt="{alt}" />
-  </div>
-  <div class="card-asin">#{idx}: {alt}</div>
-</div>
-</a>
-    '''.format(
-        idx=idx,
+    <a href="{url}" title="{alt}">
+    <div class="card card-amazon" style="width: 10rem;">
+      <div class="blocked-wrapper">
+        <p class="blocked-message">Amazon cover images may be blocked by Ad Block</p>
+        <img class="card-img-top" src="{src}" data-2x="{src2x}" alt="{alt}" />
+      </div>
+      <div class="card-asin">{asin_formatted}{alt}</div>
+    </div>
+    </a>
+        '''.format(
+        asin_formatted=asin_formatted,
         url=asin_to_url(asin),
         src=asin_to_image(asin, 250),
         src2x=asin_to_image(asin, 500),
         alt=alt,
     ))
+
+
+def asinline_to_thumbnail(line, idx):
+    params = [s.strip() for s in line.split(' ')[1:]]
+    asin = params.pop(0)
+    alt = ' '.join(params)
+
+    return get_thumbnail(asin, alt, idx)
 
 
 def asinpline_to_paragraph(line):
@@ -70,17 +76,12 @@ def asinpline_to_paragraph(line):
     return ('''
 <div class="asin-p">
   <div class="asin-p-left">
-    <a href="{url}" title="{alt}">
-      <img class="asin-p-img" src="{src}" data-2x="{src2x}" alt="{alt}">
-    </a>
+    {thumbnail}
   </div>
   <div class="asin-p-right"><p>{text}</p></div>
 </div>
 '''.format(
-        url=asin_to_url(asin),
-        src=asin_to_image(asin, 250),
-        src2x=asin_to_image(asin, 500),
-        alt=alt,
+        thumbnail=get_thumbnail(asin, alt),
         text=text,
     ))
 
