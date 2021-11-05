@@ -215,6 +215,10 @@ a.home_image {
   flex: none;
 }
 
+.asin-p-left .card-amazon {
+  margin-right: 10px;
+}
+
 .asin-p-right p {
   margin-top: 0;
 }
