@@ -71,7 +71,7 @@ def asinpline_to_paragraph(line):
     result = RE_ASINP.match(line)
     asin = result.group(1)
     alt = result.group(2)
-    text = result.group(3)
+    text = markdown.markdown(result.group(3))
 
     return ('''
 <div class="asin-p">
