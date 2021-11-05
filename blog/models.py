@@ -78,7 +78,7 @@ def asinpline_to_paragraph(line):
   <div class="asin-p-left">
     {thumbnail}
   </div>
-  <div class="asin-p-right"><p>{text}</p></div>
+  <div class="asin-p-right">{text}</div>
 </div>
 '''.format(
         thumbnail=get_thumbnail(asin, alt),
