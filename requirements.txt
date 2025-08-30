@@ -5,5 +5,5 @@ Django==1.9.11
 gunicorn==19.6.0
 Markdown>=3.0
 psycopg2==2.8.5
-pylibmc==1.5.1
+pylibmc>=1.6.0
 whitenoise==3.2.2
