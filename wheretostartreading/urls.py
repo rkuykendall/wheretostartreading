@@ -1,4 +1,4 @@
-from datetime import datetime
+from django.utils import timezone
 
 from django.urls import include, re_path
 from django.contrib import admin
@@ -24,7 +24,7 @@ class HomepageSitemap(Sitemap):
 sitemaps = {
     'blog': GenericSitemap({
             'queryset': Article.objects.filter(
-                published_at__lte=datetime.now()),
+                published_at__lte=timezone.now()),
             'date_field': 'modified_at',
         }, priority=0.6),
     'homepage': HomepageSitemap,

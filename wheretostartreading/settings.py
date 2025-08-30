@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'blog',
 ]
 
-MIDDLEWARE_CLASSES = [
+MIDDLEWARE = [
     'django.middleware.gzip.GZipMiddleware',
     'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.security.SecurityMiddleware',
@@ -57,6 +57,7 @@ MIDDLEWARE_CLASSES = [
     'simple_history.middleware.HistoryRequestMiddleware',
     'django.middleware.cache.FetchFromCacheMiddleware',
 ]
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 ROOT_URLCONF = 'wheretostartreading.urls'
 
