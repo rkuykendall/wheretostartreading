@@ -1,10 +1,10 @@
 from datetime import datetime
 
-from django.conf.urls import include, url
+from django.urls import include, re_path
 from django.contrib import admin
 from django.contrib.sitemaps.views import sitemap
 from django.contrib.sitemaps import GenericSitemap, Sitemap
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.http import HttpResponse
 
 from blog.models import Article
@@ -31,11 +31,11 @@ sitemaps = {
 }
 
 urlpatterns = [
-    url(r'^gauntlet/', admin.site.urls),
-    url(r'', include('blog.urls')),
-    url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps},
+    re_path(r'^gauntlet/', admin.site.urls),
+    re_path(r'', include('blog.urls')),
+    re_path(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps},
         name='django.contrib.sitemaps.views.sitemap'),
-    url(r'^robots.txt$', lambda r: HttpResponse(
+    re_path(r'^robots.txt$', lambda r: HttpResponse(
         (
             "User-agent: * \n"
             "Disallow: \n"
