@@ -1,8 +1,8 @@
-from django.conf.urls import url
+from django.urls import re_path
 from . import views
 
 urlpatterns = [
-    url(r'^all/$', views.all, name='all'),
-    url(r'^$', views.home, name='home'),
-    url(r'^articles/(?P<slug>[a-z\-]+)/$', views.article, name='article'),
+    re_path(r'^all/$', views.all, name='all'),
+    re_path(r'^$', views.home, name='home'),
+    re_path(r'^articles/(?P<slug>[a-z\-]+)/$', views.article, name='article'),
 ]
