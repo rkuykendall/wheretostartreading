@@ -6,11 +6,16 @@ from .models import Article
 
 
 class ArticleAdmin(admin.ModelAdmin):
-    list_display = ('title', 'title_short', 'published_at', 'modified_at', )
-    list_filter = ('published_at', )
+    list_display = (
+        "title",
+        "title_short",
+        "published_at",
+        "modified_at",
+    )
+    list_filter = ("published_at",)
 
     formfield_overrides = {
-        models.TextField: {'widget': Textarea(attrs={'rows': 70, 'cols': 120})},
+        models.TextField: {"widget": Textarea(attrs={"rows": 70, "cols": 120})},
     }
 
 

@@ -12,35 +12,34 @@ from simple_history.models import HistoricalRecords
 
 
 MARKUP_CHOICES = [
-    ['markdown', 'Markdown'],
-    ['html', 'HTML'],
+    ["markdown", "Markdown"],
+    ["html", "HTML"],
 ]
 
-AFFILIATE_ID = 'wtsr-20'
-RE_ASIN = re.compile(r'ASIN[ ]([0-9A-Z]{10})')
-RE_ASINP = re.compile(r'<ASINP[ ]([0-9A-Z]{10})[ ]?([^>]*)>[ ](.*)')
-TWITTER_AT = re.compile(r'@([A-Za-z0-9_]+)')
+AFFILIATE_ID = "wtsr-20"
+RE_ASIN = re.compile(r"ASIN[ ]([0-9A-Z]{10})")
+RE_ASINP = re.compile(r"<ASINP[ ]([0-9A-Z]{10})[ ]?([^>]*)>[ ](.*)")
+TWITTER_AT = re.compile(r"@([A-Za-z0-9_]+)")
 OFFSITE_LINKS = re.compile(r'href=["\']http')
 ASIN_LINKS = re.compile(r'href="https://www.amazon.com/dp/([0-9A-Z]{10})')
 
 
 def asin_to_url(asin):
-    return 'https://www.amazon.com/dp/{}/?tag={}'.format(
-        asin, AFFILIATE_ID)
+    return "https://www.amazon.com/dp/{}/?tag={}".format(asin, AFFILIATE_ID)
 
 
 def asin_to_image(asin, size):
     return (
-        '//ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN={}'
-        '&Format=_SL{}_&ID=AsinImage&MarketPlace=US'
-        '&ServiceVersion=20070822&WS=1&tag={}').format(
-        asin, size, AFFILIATE_ID)
+        "//ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN={}"
+        "&Format=_SL{}_&ID=AsinImage&MarketPlace=US"
+        "&ServiceVersion=20070822&WS=1&tag={}"
+    ).format(asin, size, AFFILIATE_ID)
 
 
-def get_thumbnail (asin, alt, idx=None):
-    asin_formatted = '#{idx}: '.format(idx=idx) if idx else ''
+def get_thumbnail(asin, alt, idx=None):
+    asin_formatted = "#{idx}: ".format(idx=idx) if idx else ""
 
-    return ('''
+    return """
     <a href="{url}" title="{alt}">
     <div class="card card-amazon" style="width: 10rem;">
       <div class="blocked-wrapper">
@@ -50,19 +49,19 @@ def get_thumbnail (asin, alt, idx=None):
       <div class="card-asin">{asin_formatted}{alt}</div>
     </div>
     </a>
-        '''.format(
+        """.format(
         asin_formatted=asin_formatted,
         url=asin_to_url(asin),
         src=asin_to_image(asin, 250),
         src2x=asin_to_image(asin, 500),
         alt=alt,
-    ))
+    )
 
 
 def asinline_to_thumbnail(line, idx):
-    params = [s.strip() for s in line.split(' ')[1:]]
+    params = [s.strip() for s in line.split(" ")[1:]]
     asin = params.pop(0)
-    alt = ' '.join(params)
+    alt = " ".join(params)
 
     return get_thumbnail(asin, alt, idx)
 
@@ -73,21 +72,21 @@ def asinpline_to_paragraph(line):
     alt = result.group(2)
     text = markdown.markdown(result.group(3))
 
-    return ('''
+    return """
 <div class="asin-p">
   <div class="asin-p-left">
     {thumbnail}
   </div>
   <div class="asin-p-right">{text}</div>
 </div>
-'''.format(
+""".format(
         thumbnail=get_thumbnail(asin, alt),
         text=text,
-    ))
+    )
 
 
 def process_asin_thumbnails(content):
-    lines = content.split('\n')
+    lines = content.split("\n")
     new_lines = []
     deck_started = False
     idx = 1
@@ -104,53 +103,53 @@ def process_asin_thumbnails(content):
 
         else:
             if deck_started:
-                new_lines.append('</div>')
+                new_lines.append("</div>")
                 deck_started = False
 
             new_lines.append(line)
 
     if deck_started:
-        new_lines.append('</div>')
+        new_lines.append("</div>")
 
-    return '\n'.join(new_lines)
+    return "\n".join(new_lines)
 
 
 def process_asin_paragraphs(content):
-    return '\n'.join([
-        line if not RE_ASINP.match(line)
-        else asinpline_to_paragraph(line)
-        for line in content.split('\n')
-    ])
+    return "\n".join(
+        [
+            line if not RE_ASINP.match(line) else asinpline_to_paragraph(line)
+            for line in content.split("\n")
+        ]
+    )
 
 
 def process_asin_links(content):
-    content = RE_ASIN.sub(
-        lambda m: asin_to_url(m.group(1)),
-        content)
+    content = RE_ASIN.sub(lambda m: asin_to_url(m.group(1)), content)
 
     return content
 
 
 def process_twitter_links(content):
     content = TWITTER_AT.sub(
-        lambda m: 'https://twitter.com/{}'.format(m.group(1)),
-        content)
+        lambda m: "https://twitter.com/{}".format(m.group(1)), content
+    )
 
     return content
 
 
 def process_link_targets(content):
     content = OFFSITE_LINKS.sub(
-        lambda m: 'target="_blank" {}'.format(m.group(0)),
-        content)
+        lambda m: 'target="_blank" {}'.format(m.group(0)), content
+    )
 
     return content
 
 
 def process_asin_tracking(content):
     content = ASIN_LINKS.sub(
-        lambda m: 'onClick="trackAsinClick(\'{}\')" {}'.format(
-            m.group(1), m.group(0)), content)
+        lambda m: "onClick=\"trackAsinClick('{}')\" {}".format(m.group(1), m.group(0)),
+        content,
+    )
 
     return content
 
@@ -165,33 +164,28 @@ class Article(models.Model):
     markup = models.CharField(
         max_length=10,
         choices=MARKUP_CHOICES,
-        default='markdown',
+        default="markdown",
     )
 
-    title = models.CharField(
-        'Title', max_length=255)
-    title_short = models.CharField(
-        'Short title', max_length=255, null=True, blank=True)
-    image = models.CharField(
-        'Image', max_length=255, null=True, blank=True)
-    slug = models.SlugField(
-        'Slug', unique=True, max_length=255)
+    title = models.CharField("Title", max_length=255)
+    title_short = models.CharField("Short title", max_length=255, null=True, blank=True)
+    image = models.CharField("Image", max_length=255, null=True, blank=True)
+    slug = models.SlugField("Slug", unique=True, max_length=255)
     credit = models.CharField(
-        'Credit', max_length=255, default='Written by Robert Kuykendall')
-    description = models.CharField(
-        'Description', max_length=160, null=True, blank=True)
-    content = models.TextField('Content')
-    disqus_src = models.TextField(
-        'Disqus override source', null=True, blank=True)
+        "Credit", max_length=255, default="Written by Robert Kuykendall"
+    )
+    description = models.CharField("Description", max_length=160, null=True, blank=True)
+    content = models.TextField("Content")
+    disqus_src = models.TextField("Disqus override source", null=True, blank=True)
 
     class Meta:
-        ordering = ['-published_at', '-modified_at']
+        ordering = ["-published_at", "-modified_at"]
 
     def __unicode__(self):
         return self.title
 
     def __str__(self):
-        published = 'Unpublished: ' if not self.published_at else ''
+        published = "Unpublished: " if not self.published_at else ""
         return "{}{}".format(published, self.title)
 
     @property
@@ -206,7 +200,7 @@ class Article(models.Model):
         content = process_asin_links(content)
         content = process_twitter_links(content)
 
-        if self.markup == 'markdown':
+        if self.markup == "markdown":
             content = markdown.markdown(content)
 
         content = process_link_targets(content)
@@ -216,16 +210,18 @@ class Article(models.Model):
 
     @property
     def related(self, num=4):
-        return list(Article.objects.filter(
-            published_at__lte=datetime.now()).exclude(
-                id=self.id).order_by('?'))[:num]
+        return list(
+            Article.objects.filter(published_at__lte=datetime.now())
+            .exclude(id=self.id)
+            .order_by("?")
+        )[:num]
 
     @property
     def canonical_url(self):
         return "https://wheretostartreading.com/articles/{}/".format(self.slug)
 
     def get_absolute_url(self):
-        return reverse('blog.views.article', args=[self.slug])
+        return reverse("blog.views.article", args=[self.slug])
 
 
 @receiver(post_save)

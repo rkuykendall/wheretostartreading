@@ -1,4 +1,5 @@
 import dj_database_url
+
 """
 Django settings for wheretostartreading project.
 
@@ -20,12 +21,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 
 
-PROD = (os.environ.get('PROD', 'True') == 'True')
+PROD = os.environ.get("PROD", "True") == "True"
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["*"]
 
 SECURE_SSL_REDIRECT = PROD
 
@@ -33,59 +34,59 @@ SECURE_SSL_REDIRECT = PROD
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.sitemaps',
-    'django.contrib.staticfiles',
-    'simple_history',
-    'blog',
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.sitemaps",
+    "django.contrib.staticfiles",
+    "simple_history",
+    "blog",
 ]
 
 MIDDLEWARE = [
-    'django.middleware.gzip.GZipMiddleware',
-    'django.middleware.cache.UpdateCacheMiddleware',
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'simple_history.middleware.HistoryRequestMiddleware',
-    'django.middleware.cache.FetchFromCacheMiddleware',
+    "django.middleware.gzip.GZipMiddleware",
+    "django.middleware.cache.UpdateCacheMiddleware",
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "simple_history.middleware.HistoryRequestMiddleware",
+    "django.middleware.cache.FetchFromCacheMiddleware",
 ]
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-ROOT_URLCONF = 'wheretostartreading.urls'
+ROOT_URLCONF = "wheretostartreading.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'wheretostartreading.wsgi.application'
+WSGI_APPLICATION = "wheretostartreading.wsgi.application"
 
 
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
-db_from_env = dj_database_url.config(default='sqlite:///db.sqlite3')
+db_from_env = dj_database_url.config(default="sqlite:///db.sqlite3")
 DATABASES = {
-    'default': db_from_env,
+    "default": db_from_env,
 }
 # DATABASES = {
 #     'default': {
@@ -100,22 +101,19 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': (
-            'django.contrib.auth.password_validation.'
-            'UserAttributeSimilarityValidator'),
+        "NAME": (
+            "django.contrib.auth.password_validation."
+            "UserAttributeSimilarityValidator"
+        ),
     },
     {
-        'NAME': (
-            'django.contrib.auth.password_validation.MinimumLengthValidator'),
+        "NAME": ("django.contrib.auth.password_validation.MinimumLengthValidator"),
     },
     {
-        'NAME': (
-            'django.contrib.auth.password_validation.CommonPasswordValidator'),
+        "NAME": ("django.contrib.auth.password_validation.CommonPasswordValidator"),
     },
     {
-        'NAME': (
-            'django.contrib.auth.password_validation.'
-            'NumericPasswordValidator'),
+        "NAME": ("django.contrib.auth.password_validation." "NumericPasswordValidator"),
     },
 ]
 
@@ -123,9 +121,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = "UTC"
 
 USE_I18N = True
 
@@ -138,61 +136,53 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
-STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
-STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(PROJECT_ROOT, "staticfiles")
+STATIC_URL = "/static/"
 
 # Extra places for collectstatic to find static files.
-STATICFILES_DIRS = (
-    os.path.join(PROJECT_ROOT, 'static'),
-)
+STATICFILES_DIRS = (os.path.join(PROJECT_ROOT, "static"),)
 
 
 # Simplified static file serving.
 # https://warehouse.python.org/project/whitenoise/
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-if os.environ.get('MEMCACHIER_SERVERS', '') != '':
+if os.environ.get("MEMCACHIER_SERVERS", "") != "":
     DEBUG = False
 
-    os.environ['MEMCACHE_SERVERS'] = os.environ.get(
-        'MEMCACHIER_SERVERS', '').replace(',', ';')
-    os.environ['MEMCACHE_USERNAME'] = os.environ.get('MEMCACHIER_USERNAME', '')
-    os.environ['MEMCACHE_PASSWORD'] = os.environ.get('MEMCACHIER_PASSWORD', '')
+    os.environ["MEMCACHE_SERVERS"] = os.environ.get("MEMCACHIER_SERVERS", "").replace(
+        ",", ";"
+    )
+    os.environ["MEMCACHE_USERNAME"] = os.environ.get("MEMCACHIER_USERNAME", "")
+    os.environ["MEMCACHE_PASSWORD"] = os.environ.get("MEMCACHIER_PASSWORD", "")
 
     CACHES = {
-        'default': {
+        "default": {
             # Use pylibmc
-            'BACKEND': 'django_pylibmc.memcached.PyLibMCCache',
-
+            "BACKEND": "django_pylibmc.memcached.PyLibMCCache",
             # Use binary memcache protocol (needed for authentication)
-            'BINARY': True,
-
+            "BINARY": True,
             # TIMEOUT is not the connection timeout! It's the default
             # expiration timeout that should be applied to keys! Setting it to
             # `None` disables expiration.
-            'TIMEOUT': None,
-
-            'OPTIONS': {
+            "TIMEOUT": None,
+            "OPTIONS": {
                 # Enable faster IO
-                'no_block': True,
-                'tcp_nodelay': True,
-
+                "no_block": True,
+                "tcp_nodelay": True,
                 # Keep connection alive
-                'tcp_keepalive': True,
-
+                "tcp_keepalive": True,
                 # Timeout for set/get requests
-                '_poll_timeout': 2000,
-
+                "_poll_timeout": 2000,
                 # Use consistent hashing for failover
-                'ketama': True,
-
+                "ketama": True,
                 # Configure failover timings
-                'connect_timeout': 2000,
-                'remove_failed': 4,
-                'retry_timeout': 2,
-                'dead_timeout': 10
-            }
+                "connect_timeout": 2000,
+                "remove_failed": 4,
+                "retry_timeout": 2,
+                "dead_timeout": 10,
+            },
         }
     }
 

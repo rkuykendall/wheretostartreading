@@ -6,32 +6,41 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('blog', '007_add_featured'),
+        ("blog", "007_add_featured"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='historicalarticle',
-            options={'get_latest_by': ('history_date', 'history_id'), 'ordering': ('-history_date', '-history_id'), 'verbose_name': 'historical article', 'verbose_name_plural': 'historical articles'},
+            name="historicalarticle",
+            options={
+                "get_latest_by": ("history_date", "history_id"),
+                "ordering": ("-history_date", "-history_id"),
+                "verbose_name": "historical article",
+                "verbose_name_plural": "historical articles",
+            },
         ),
         migrations.AddField(
-            model_name='historicalarticle',
-            name='history_change_reason',
+            model_name="historicalarticle",
+            name="history_change_reason",
             field=models.CharField(max_length=100, null=True),
         ),
         migrations.AlterField(
-            model_name='article',
-            name='id',
-            field=models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
+            model_name="article",
+            name="id",
+            field=models.BigAutoField(
+                auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+            ),
         ),
         migrations.AlterField(
-            model_name='historicalarticle',
-            name='history_date',
+            model_name="historicalarticle",
+            name="history_date",
             field=models.DateTimeField(db_index=True),
         ),
         migrations.AlterField(
-            model_name='historicalarticle',
-            name='id',
-            field=models.BigIntegerField(auto_created=True, blank=True, db_index=True, verbose_name='ID'),
+            model_name="historicalarticle",
+            name="id",
+            field=models.BigIntegerField(
+                auto_created=True, blank=True, db_index=True, verbose_name="ID"
+            ),
         ),
     ]

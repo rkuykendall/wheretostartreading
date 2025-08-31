@@ -8,19 +8,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('blog', '0006_auto_20171015_1743'),
+        ("blog", "0006_auto_20171015_1743"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='article',
-            name='featured',
+            model_name="article",
+            name="featured",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='historicalarticle',
-            name='featured',
+            model_name="historicalarticle",
+            name="featured",
             field=models.BooleanField(default=False),
         ),
     ]
-

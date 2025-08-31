@@ -8,18 +8,22 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('blog', '0002_auto_20161217_1906'),
+        ("blog", "0002_auto_20161217_1906"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='article',
-            name='image',
-            field=models.CharField(blank=True, max_length=255, null=True, verbose_name='Title'),
+            model_name="article",
+            name="image",
+            field=models.CharField(
+                blank=True, max_length=255, null=True, verbose_name="Title"
+            ),
         ),
         migrations.AddField(
-            model_name='historicalarticle',
-            name='image',
-            field=models.CharField(blank=True, max_length=255, null=True, verbose_name='Title'),
+            model_name="historicalarticle",
+            name="image",
+            field=models.CharField(
+                blank=True, max_length=255, null=True, verbose_name="Title"
+            ),
         ),
     ]

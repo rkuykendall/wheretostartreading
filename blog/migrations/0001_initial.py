@@ -17,61 +17,90 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Article',
+            name="Article",
             fields=[
-                ('id', models.AutoField(
-                    auto_created=True, primary_key=True, serialize=False,
-                    verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('modified_at', models.DateTimeField(auto_now=True)),
-                ('published_at', models.DateTimeField(blank=True, null=True)),
-                ('markup', models.CharField(
-                    choices=[['markdown', 'Markdown'], ['html', 'HTML']],
-                    default='markdown', max_length=10)),
-                ('title', models.CharField(max_length=255)),
-                ('slug', models.SlugField(max_length=255, unique=True)),
-                ('description', models.CharField(
-                    blank=True, max_length=255, null=True)),
-                ('content', models.TextField()),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("modified_at", models.DateTimeField(auto_now=True)),
+                ("published_at", models.DateTimeField(blank=True, null=True)),
+                (
+                    "markup",
+                    models.CharField(
+                        choices=[["markdown", "Markdown"], ["html", "HTML"]],
+                        default="markdown",
+                        max_length=10,
+                    ),
+                ),
+                ("title", models.CharField(max_length=255)),
+                ("slug", models.SlugField(max_length=255, unique=True)),
+                (
+                    "description",
+                    models.CharField(blank=True, max_length=255, null=True),
+                ),
+                ("content", models.TextField()),
             ],
             options={
-                'ordering': ['-published_at', '-modified_at'],
+                "ordering": ["-published_at", "-modified_at"],
             },
         ),
         migrations.CreateModel(
-            name='HistoricalArticle',
+            name="HistoricalArticle",
             fields=[
-                ('id', models.IntegerField(
-                    auto_created=True, blank=True, db_index=True,
-                    verbose_name='ID')),
-                ('created_at', models.DateTimeField(
-                    blank=True, editable=False)),
-                ('modified_at', models.DateTimeField(
-                    blank=True, editable=False)),
-                ('published_at', models.DateTimeField(blank=True, null=True)),
-                ('markup', models.CharField(
-                    choices=[['markdown', 'Markdown'], ['html', 'HTML']],
-                    default='markdown', max_length=10)),
-                ('title', models.CharField(max_length=255)),
-                ('slug', models.SlugField(max_length=255)),
-                ('description', models.CharField(
-                    blank=True, max_length=255, null=True)),
-                ('content', models.TextField()),
-                ('history_id', models.AutoField(
-                    primary_key=True, serialize=False)),
-                ('history_date', models.DateTimeField()),
-                ('history_type', models.CharField(
-                    choices=[
-                        ('+', 'Created'), ('~', 'Changed'), ('-', 'Deleted')
-                    ], max_length=1)),
-                ('history_user', models.ForeignKey(
-                    null=True, on_delete=django.db.models.deletion.SET_NULL,
-                    related_name='+', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.IntegerField(
+                        auto_created=True, blank=True, db_index=True, verbose_name="ID"
+                    ),
+                ),
+                ("created_at", models.DateTimeField(blank=True, editable=False)),
+                ("modified_at", models.DateTimeField(blank=True, editable=False)),
+                ("published_at", models.DateTimeField(blank=True, null=True)),
+                (
+                    "markup",
+                    models.CharField(
+                        choices=[["markdown", "Markdown"], ["html", "HTML"]],
+                        default="markdown",
+                        max_length=10,
+                    ),
+                ),
+                ("title", models.CharField(max_length=255)),
+                ("slug", models.SlugField(max_length=255)),
+                (
+                    "description",
+                    models.CharField(blank=True, max_length=255, null=True),
+                ),
+                ("content", models.TextField()),
+                ("history_id", models.AutoField(primary_key=True, serialize=False)),
+                ("history_date", models.DateTimeField()),
+                (
+                    "history_type",
+                    models.CharField(
+                        choices=[("+", "Created"), ("~", "Changed"), ("-", "Deleted")],
+                        max_length=1,
+                    ),
+                ),
+                (
+                    "history_user",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="+",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'ordering': ('-history_date', '-history_id'),
-                'verbose_name': 'historical article',
-                'get_latest_by': 'history_date',
+                "ordering": ("-history_date", "-history_id"),
+                "verbose_name": "historical article",
+                "get_latest_by": "history_date",
             },
         ),
     ]

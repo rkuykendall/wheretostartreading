@@ -8,34 +8,40 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('blog', '0003_auto_20161217_2052'),
+        ("blog", "0003_auto_20161217_2052"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='article',
-            name='credit',
+            model_name="article",
+            name="credit",
             field=models.CharField(
-                default='Written by Robert Kuykendall', max_length=255,
-                verbose_name='Credit'),
+                default="Written by Robert Kuykendall",
+                max_length=255,
+                verbose_name="Credit",
+            ),
         ),
         migrations.AddField(
-            model_name='historicalarticle',
-            name='credit',
+            model_name="historicalarticle",
+            name="credit",
             field=models.CharField(
-                default='Written by Robert Kuykendall', max_length=255,
-                verbose_name='Credit'),
+                default="Written by Robert Kuykendall",
+                max_length=255,
+                verbose_name="Credit",
+            ),
         ),
         migrations.AlterField(
-            model_name='article',
-            name='image',
+            model_name="article",
+            name="image",
             field=models.CharField(
-                blank=True, max_length=255, null=True, verbose_name='Image'),
+                blank=True, max_length=255, null=True, verbose_name="Image"
+            ),
         ),
         migrations.AlterField(
-            model_name='historicalarticle',
-            name='image',
+            model_name="historicalarticle",
+            name="image",
             field=models.CharField(
-                blank=True, max_length=255, null=True, verbose_name='Image'),
+                blank=True, max_length=255, null=True, verbose_name="Image"
+            ),
         ),
     ]
