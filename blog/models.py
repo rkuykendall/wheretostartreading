@@ -1,12 +1,13 @@
 import re
 import markdown
-from datetime import datetime
+from typing import Optional, Tuple
 
 from django.core.cache import cache
 from django.urls import reverse
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.utils import timezone
 
 from simple_history.models import HistoricalRecords
 
@@ -28,34 +29,136 @@ def asin_to_url(asin):
     return "https://www.amazon.com/dp/{}/?tag={}".format(asin, AFFILIATE_ID)
 
 
-def asin_to_image(asin, size):
-    return (
-        "//ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN={}"
-        "&Format=_SL{}_&ID=AsinImage&MarketPlace=US"
-        "&ServiceVersion=20070822&WS=1&tag={}"
-    ).format(asin, size, AFFILIATE_ID)
+class AmazonProduct(models.Model):
+    """Lightweight cache of Amazon product image URLs by ASIN."""
+
+    asin = models.CharField(max_length=10, unique=True)
+    title = models.CharField(max_length=255, null=True, blank=True)
+    image_url = models.URLField(max_length=500, null=True, blank=True)
+    image_url_2x = models.URLField(max_length=500, null=True, blank=True)
+    last_fetched_at = models.DateTimeField(null=True, blank=True)
+    fetch_status = models.CharField(max_length=50, null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.asin}"
+
+    class Meta:
+        indexes = [models.Index(fields=["asin"])]
+
+
+def _get_cached_asin_images(asin: str) -> Optional[Tuple[str, str, Optional[str]]]:
+    """Return (image_url, image_url_2x, title) from DB/cache if fresh enough."""
+    cache_key = f"asin-images:{asin}"
+    cached = cache.get(cache_key)
+    if cached:
+        return cached
+    try:
+        ap = AmazonProduct.objects.filter(asin=asin).first()
+    except Exception:
+        ap = None
+    if ap and ap.image_url:
+        # consider fresh if fetched within 30 days
+        if not ap.last_fetched_at or (
+            timezone.now() - ap.last_fetched_at
+        ).days <= 30:
+            data = (ap.image_url, ap.image_url_2x or ap.image_url, ap.title)
+            cache.set(cache_key, data, 60 * 60)  # 1 hour
+            return data
+    return None
+
+
+def _store_asin_images(
+    asin: str, image_url: Optional[str], image_url_2x: Optional[str], title: Optional[str], status: str
+) -> Optional[Tuple[str, str, Optional[str]]]:
+    try:
+        ap, _ = AmazonProduct.objects.get_or_create(asin=asin)
+        ap.image_url = image_url
+        ap.image_url_2x = image_url_2x
+        if title:
+            ap.title = title
+        ap.last_fetched_at = timezone.now()
+        ap.fetch_status = status
+        ap.save()
+        if image_url:
+            data = (image_url, image_url_2x or image_url, title)
+            cache.set(f"asin-images:{asin}", data, 60 * 60)
+            return data
+    except Exception:
+        pass
+    return None
+
+
+def get_asin_image_urls(asin: str) -> Optional[Tuple[str, str, Optional[str]]]:
+    """Resolve image URLs for an ASIN using DB cache then PA-API; returns (src, src2x, title)."""
+    # 1) Cache/DB
+    cached = _get_cached_asin_images(asin)
+    if cached:
+        return cached
+
+    # 2) Try PA-API fetch
+    try:
+        from . import amazon_api
+
+        fetched = amazon_api.fetch_paapi_images(asin)
+        if fetched:
+            return _store_asin_images(
+                asin,
+                fetched.get("image_url"),
+                fetched.get("image_url_2x"),
+                fetched.get("title"),
+                status="ok",
+            )
+        else:
+            # negative cache briefly to avoid hammering on failures
+            cache.set(f"asin-images:{asin}", None, 60 * 5)
+            _store_asin_images(asin, None, None, None, status="miss")
+            return None
+    except Exception:
+        # On any error, do not break page render
+        return None
 
 
 def get_thumbnail(asin, alt, idx=None):
-    asin_formatted = "#{idx}: ".format(idx=idx) if idx else ""
+        asin_formatted = "#{idx}: ".format(idx=idx) if idx else ""
 
-    return """
-    <a href="{url}" title="{alt}">
-    <div class="card card-amazon" style="width: 10rem;">
-      <div class="blocked-wrapper">
-        <p class="blocked-message">Amazon cover images may be blocked by Ad Block</p>
-        <img class="card-img-top" src="{src}" data-2x="{src2x}" alt="{alt}" />
-      </div>
-      <div class="card-asin">{asin_formatted}{alt}</div>
-    </div>
-    </a>
-        """.format(
-        asin_formatted=asin_formatted,
-        url=asin_to_url(asin),
-        src=asin_to_image(asin, 250),
-        src2x=asin_to_image(asin, 500),
-        alt=alt,
-    )
+        # Try to resolve images via stored/fetched URLs
+        resolved = get_asin_image_urls(asin)
+        if resolved:
+                src, src2x, title = resolved
+                alt_text = alt or title or "Amazon product"
+                return """
+        <a href="{url}" title="{alt}">
+        <div class="card card-amazon" style="width: 10rem;">
+            <div class="blocked-wrapper">
+                <p class="blocked-message">Amazon cover images may be blocked by Ad Block</p>
+                <img class="card-img-top" src="{src}" data-2x="{src2x}" alt="{alt}" />
+            </div>
+            <div class="card-asin">{asin_formatted}{alt}</div>
+        </div>
+        </a>
+                """.format(
+                        asin_formatted=asin_formatted,
+                        url=asin_to_url(asin),
+                        src=src,
+                        src2x=src2x or src,
+                        alt=alt_text,
+                )
+
+        # Fallback: render link-only card without image
+        return """
+        <a href="{url}" title="{alt}">
+        <div class="card card-amazon" style="width: 10rem;">
+            <div class="blocked-wrapper">
+                <p class="blocked-message">Image unavailable</p>
+            </div>
+            <div class="card-asin">{asin_formatted}{alt}</div>
+        </div>
+        </a>
+                """.format(
+                asin_formatted=asin_formatted,
+                url=asin_to_url(asin),
+                alt=alt or "Amazon product",
+        )
 
 
 def asinline_to_thumbnail(line, idx):
@@ -211,7 +314,7 @@ class Article(models.Model):
     @property
     def related(self, num=4):
         return list(
-            Article.objects.filter(published_at__lte=datetime.now())
+            Article.objects.filter(published_at__lte=timezone.now())
             .exclude(id=self.id)
             .order_by("?")
         )[:num]

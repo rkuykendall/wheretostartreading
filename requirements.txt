@@ -7,3 +7,4 @@ Markdown>=3.0
 psycopg2>=2.9.9
 pylibmc>=1.6.0
 whitenoise>=6.0.0
+requests>=2.31.0

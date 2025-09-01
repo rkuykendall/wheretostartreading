@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.forms import Textarea
 from django.db import models
 
-from .models import Article
+from .models import Article, AmazonProduct
 
 
 class ArticleAdmin(admin.ModelAdmin):
@@ -20,3 +20,9 @@ class ArticleAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Article, ArticleAdmin)
+
+
+@admin.register(AmazonProduct)
+class AmazonProductAdmin(admin.ModelAdmin):
+    list_display = ("asin", "title", "last_fetched_at", "fetch_status")
+    search_fields = ("asin", "title")
