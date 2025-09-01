@@ -48,7 +48,7 @@ def _build_getitems_payload(asin: str, partner_tag: str) -> Dict:
     }
 
 
-def fetch_paapi_images(asin: str) -> Optional[Dict[str, str]]:
+def fetch_paapi_images(asin: str, verbose: bool = False) -> Optional[Dict[str, str]]:
     # Lazy import to avoid hard failure if requests isn't installed yet
     try:
         import requests  # type: ignore
@@ -76,9 +76,16 @@ def fetch_paapi_images(asin: str) -> Optional[Dict[str, str]]:
     canonical_uri = "/paapi5/getitems"
     canonical_querystring = ""
     content_type = "application/json; charset=UTF-8"
-    canonical_headers = f"content-type:{content_type}\nhost:{host}\nx-amz-date:{amz_date}\n"
-    signed_headers = "content-type;host;x-amz-date"
+    target = "com.amazon.paapi5.v1.ProductAdvertisingAPIv1.GetItems"
     payload_hash = hashlib.sha256(payload_json.encode("utf-8")).hexdigest()
+    canonical_headers = (
+        f"content-type:{content_type}\n"
+        f"host:{host}\n"
+        f"x-amz-content-sha256:{payload_hash}\n"
+        f"x-amz-date:{amz_date}\n"
+        f"x-amz-target:{target}\n"
+    )
+    signed_headers = "content-type;host;x-amz-content-sha256;x-amz-date;x-amz-target"
     canonical_request = (
         f"{method}\n{canonical_uri}\n{canonical_querystring}\n{canonical_headers}\n{signed_headers}\n{payload_hash}"
     )
@@ -100,16 +107,29 @@ def fetch_paapi_images(asin: str) -> Optional[Dict[str, str]]:
     headers = {
         "content-type": content_type,
         "x-amz-date": amz_date,
+        "x-amz-target": target,
+        "x-amz-content-sha256": payload_hash,
+        "accept": "application/json",
         "Authorization": authorization_header,
     }
 
     try:
-        resp = requests.post(endpoint, data=payload_json, headers=headers, timeout=6)
+        resp = requests.post(endpoint, data=payload_json, headers=headers, timeout=10)
         if resp.status_code != 200:
+            if verbose:
+                try:
+                    body = resp.text[:800]
+                except Exception:
+                    body = "<unreadable>"
+                print(f"PA-API HTTP {resp.status_code} for {asin}: {body}")
             return None
         data = resp.json()
+        if "Errors" in data and verbose:
+            print(f"PA-API Errors for {asin}: {data.get('Errors')}")
         items = data.get("ItemsResult", {}).get("Items", [])
         if not items:
+            if verbose:
+                print(f"PA-API returned no items for {asin}. Raw: {data}")
             return None
         item = items[0]
         images = item.get("Images", {}).get("Primary", {})
@@ -117,11 +137,15 @@ def fetch_paapi_images(asin: str) -> Optional[Dict[str, str]]:
         medium = images.get("Medium", {}).get("URL")
         large = images.get("Large", {}).get("URL")
         if not (medium or large):
+            if verbose:
+                print(f"PA-API item missing image URLs for {asin}. Item: {item}")
             return None
         return {
             "title": title,
             "image_url": medium or large,
             "image_url_2x": large or medium,
         }
-    except Exception:
+    except Exception as e:
+        if verbose:
+            print(f"PA-API exception for {asin}: {e}")
         return None
