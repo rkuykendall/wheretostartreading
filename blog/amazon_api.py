@@ -57,6 +57,7 @@ def _build_getitems_payload(asin: str, partner_tag: str, marketplace: str, title
         ])
     return {
         "ItemIds": [asin],
+        "ItemIdType": "ASIN",
         "Resources": resources,
         "PartnerTag": partner_tag,
         "PartnerType": "Associates",
@@ -110,13 +111,14 @@ def fetch_paapi_images(asin: str, verbose: bool = False, title_only: bool = Fals
     target = "com.amazon.paapi5.v1.ProductAdvertisingAPIv1.GetItems"
     payload_hash = hashlib.sha256(payload_json.encode("utf-8")).hexdigest()
     canonical_headers = (
+        f"content-encoding:amz-1.0\n"
         f"content-type:{content_type}\n"
         f"host:{host}\n"
         f"x-amz-content-sha256:{payload_hash}\n"
         f"x-amz-date:{amz_date}\n"
         f"x-amz-target:{target}\n"
     )
-    signed_headers = "content-type;host;x-amz-content-sha256;x-amz-date;x-amz-target"
+    signed_headers = "content-encoding;content-type;host;x-amz-content-sha256;x-amz-date;x-amz-target"
     canonical_request = (
         f"{method}\n{canonical_uri}\n{canonical_querystring}\n{canonical_headers}\n{signed_headers}\n{payload_hash}"
     )
@@ -136,13 +138,14 @@ def fetch_paapi_images(asin: str, verbose: bool = False, title_only: bool = Fals
     )
 
     headers = {
+        "content-encoding": "amz-1.0",
         "content-type": content_type,
-    "host": host,
+        "host": host,
         "x-amz-date": amz_date,
         "x-amz-target": target,
         "x-amz-content-sha256": payload_hash,
         "accept": "application/json",
-    "user-agent": "wtsr-paapi/1.0 (https://wheretostartreading.com)",
+        "user-agent": "wtsr-paapi/1.0 (https://wheretostartreading.com)",
         "Authorization": authorization_header,
     }
 
@@ -157,30 +160,20 @@ def fetch_paapi_images(asin: str, verbose: bool = False, title_only: bool = Fals
         )
 
     try:
-        attempts = 0
-        while True:
-            resp = requests.post(endpoint, data=payload_json, headers=headers, timeout=10)
-            if resp.status_code == 200:
-                break
+        resp = requests.post(endpoint, data=payload_json, headers=headers, timeout=10)
+        if resp.status_code != 200:
             if verbose:
                 try:
                     body = resp.text[:800]
                 except Exception:
                     body = "<unreadable>"
                 print(f"PA-API HTTP {resp.status_code} for {asin}: {body}")
-            if resp.status_code == 404 and "InternalFailure" in (resp.text or "") and attempts < 2:
-                attempts += 1
-                sleep_s = 1.0 * (2 ** (attempts - 1))
-                if verbose:
-                    print(f"PA-API retrying after InternalFailure in {sleep_s:.1f}s (attempt {attempts+1}/3)...")
-                time.sleep(sleep_s)
-                continue
-            # As a diagnostic, try a title-only request to confirm item is accessible
-            if not title_only and verbose:
-                print("PA-API attempting title-only diagnostic fetch...")
-                diag = fetch_paapi_images(asin, verbose=verbose, title_only=True)
-                if diag:
-                    print("PA-API title-only fetch succeeded (images still unavailable).")
+                # As a diagnostic, try a title-only request to confirm item is accessible
+                if not title_only:
+                    print("PA-API attempting title-only diagnostic fetch...")
+                    diag = fetch_paapi_images(asin, verbose=verbose, title_only=True)
+                    if diag:
+                        print("PA-API title-only fetch succeeded (images still unavailable).")
             return None
         data = resp.json()
         if "Errors" in data and verbose:
