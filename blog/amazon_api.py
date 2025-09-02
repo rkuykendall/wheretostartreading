@@ -45,21 +45,25 @@ def _marketplace_for_host(host: str) -> str:
     return "www.amazon.com"
 
 
-def _build_getitems_payload(asin: str, partner_tag: str, marketplace: str) -> Dict:
-    return {
-        "ItemIds": [asin],
-        "Resources": [
+def _build_getitems_payload(asin: str, partner_tag: str, marketplace: str, title_only: bool = False) -> Dict:
+    resources = [
+        "ItemInfo.Title",
+    ]
+    if not title_only:
+        resources.extend([
             "Images.Primary.Medium",
             "Images.Primary.Large",
-            "ItemInfo.Title",
-        ],
+        ])
+    return {
+        "ItemIds": [asin],
+        "Resources": resources,
         "PartnerTag": partner_tag,
         "PartnerType": "Associates",
         "Marketplace": marketplace,
     }
 
 
-def fetch_paapi_images(asin: str, verbose: bool = False) -> Optional[Dict[str, str]]:
+def fetch_paapi_images(asin: str, verbose: bool = False, title_only: bool = False) -> Optional[Dict[str, str]]:
     # Lazy import to avoid hard failure if requests isn't installed yet
     try:
         import requests  # type: ignore
@@ -93,7 +97,7 @@ def fetch_paapi_images(asin: str, verbose: bool = False) -> Optional[Dict[str, s
     date_stamp = datetime.datetime.utcnow().strftime("%Y%m%d")
 
     marketplace = _marketplace_for_host(host)
-    payload = _build_getitems_payload(asin, partner_tag, marketplace)
+    payload = _build_getitems_payload(asin, partner_tag, marketplace, title_only=title_only)
     payload_json = json.dumps(payload)
 
     service = "ProductAdvertisingAPI"
@@ -141,11 +145,13 @@ def fetch_paapi_images(asin: str, verbose: bool = False) -> Optional[Dict[str, s
 
     if verbose:
         print(
-            f"PA-API request: endpoint={endpoint}, marketplace={marketplace}, partner_tag={partner_tag}, asin={asin}"
+            f"PA-API request: endpoint={endpoint}, marketplace={marketplace}, partner_tag={partner_tag}, asin={asin}, title_only={title_only}"
         )
-    # Safe to print meta (no secrets)
-    print(f"PA-API signed headers: {signed_headers}")
-    print(f"PA-API canonical_request SHA256: {hashlib.sha256(canonical_request.encode('utf-8')).hexdigest()}")
+        # Safe to print meta (no secrets)
+        print(f"PA-API signed headers: {signed_headers}")
+        print(
+            f"PA-API canonical_request SHA256: {hashlib.sha256(canonical_request.encode('utf-8')).hexdigest()}"
+        )
 
     try:
         resp = requests.post(endpoint, data=payload_json, headers=headers, timeout=10)
@@ -168,6 +174,12 @@ def fetch_paapi_images(asin: str, verbose: bool = False) -> Optional[Dict[str, s
                         except Exception:
                             body = "<unreadable>"
                         print(f"PA-API HTTP {resp.status_code} (retry) for {asin}: {body}")
+                    # As a diagnostic, try a title-only request to confirm item is accessible
+                    if not title_only and verbose:
+                        print("PA-API attempting title-only diagnostic fetch...")
+                        diag = fetch_paapi_images(asin, verbose=verbose, title_only=True)
+                        if diag:
+                            print("PA-API title-only fetch succeeded (images still unavailable).")
                     return None
             else:
                 return None
@@ -180,18 +192,18 @@ def fetch_paapi_images(asin: str, verbose: bool = False) -> Optional[Dict[str, s
                 print(f"PA-API returned no items for {asin}. Raw: {data}")
             return None
         item = items[0]
-        images = item.get("Images", {}).get("Primary", {})
         title = item.get("ItemInfo", {}).get("Title", {}).get("DisplayValue")
-        medium = images.get("Medium", {}).get("URL")
-        large = images.get("Large", {}).get("URL")
-        if not (medium or large):
+        images = item.get("Images", {}).get("Primary", {}) if not title_only else {}
+        medium = images.get("Medium", {}).get("URL") if images else None
+        large = images.get("Large", {}).get("URL") if images else None
+        if not title_only and not (medium or large):
             if verbose:
                 print(f"PA-API item missing image URLs for {asin}. Item: {item}")
             return None
         return {
             "title": title,
-            "image_url": medium or large,
-            "image_url_2x": large or medium,
+            "image_url": (medium or large) if not title_only else None,
+            "image_url_2x": (large or medium) if not title_only else None,
         }
     except Exception as e:
         if verbose:
