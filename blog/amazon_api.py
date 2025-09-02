@@ -8,6 +8,7 @@ import hashlib
 import hmac
 import json
 import datetime
+import time
 
 PAAPI_HOSTS = {
     "us-east-1": "webservices.amazon.com",
@@ -90,7 +91,8 @@ def fetch_paapi_images(asin: str, verbose: bool = False, title_only: bool = Fals
             print("PA-API missing required credentials; skipping fetch")
         return None
 
-    host = PAAPI_HOSTS.get(region, PAAPI_HOSTS["us-east-1"])
+    host_override = _get_env("AMAZON_PAAPI_HOST")
+    host = host_override or PAAPI_HOSTS.get(region, PAAPI_HOSTS["us-east-1"])
     endpoint = f"https://{host}/paapi5/getitems"
 
     amz_date = datetime.datetime.utcnow().strftime("%Y%m%dT%H%M%SZ")
@@ -140,6 +142,7 @@ def fetch_paapi_images(asin: str, verbose: bool = False, title_only: bool = Fals
         "x-amz-target": target,
         "x-amz-content-sha256": payload_hash,
         "accept": "application/json",
+    "user-agent": "wtsr-paapi/1.0 (https://wheretostartreading.com)",
         "Authorization": authorization_header,
     }
 
@@ -154,35 +157,31 @@ def fetch_paapi_images(asin: str, verbose: bool = False, title_only: bool = Fals
         )
 
     try:
-        resp = requests.post(endpoint, data=payload_json, headers=headers, timeout=10)
-        if resp.status_code != 200:
+        attempts = 0
+        while True:
+            resp = requests.post(endpoint, data=payload_json, headers=headers, timeout=10)
+            if resp.status_code == 200:
+                break
             if verbose:
                 try:
                     body = resp.text[:800]
                 except Exception:
                     body = "<unreadable>"
                 print(f"PA-API HTTP {resp.status_code} for {asin}: {body}")
-            # Retry once on transient InternalFailure
-            if resp.status_code == 404 and "InternalFailure" in (resp.text or ""):
+            if resp.status_code == 404 and "InternalFailure" in (resp.text or "") and attempts < 2:
+                attempts += 1
+                sleep_s = 1.0 * (2 ** (attempts - 1))
                 if verbose:
-                    print("PA-API retrying once after InternalFailure...")
-                resp = requests.post(endpoint, data=payload_json, headers=headers, timeout=10)
-                if resp.status_code != 200:
-                    if verbose:
-                        try:
-                            body = resp.text[:800]
-                        except Exception:
-                            body = "<unreadable>"
-                        print(f"PA-API HTTP {resp.status_code} (retry) for {asin}: {body}")
-                    # As a diagnostic, try a title-only request to confirm item is accessible
-                    if not title_only and verbose:
-                        print("PA-API attempting title-only diagnostic fetch...")
-                        diag = fetch_paapi_images(asin, verbose=verbose, title_only=True)
-                        if diag:
-                            print("PA-API title-only fetch succeeded (images still unavailable).")
-                    return None
-            else:
-                return None
+                    print(f"PA-API retrying after InternalFailure in {sleep_s:.1f}s (attempt {attempts+1}/3)...")
+                time.sleep(sleep_s)
+                continue
+            # As a diagnostic, try a title-only request to confirm item is accessible
+            if not title_only and verbose:
+                print("PA-API attempting title-only diagnostic fetch...")
+                diag = fetch_paapi_images(asin, verbose=verbose, title_only=True)
+                if diag:
+                    print("PA-API title-only fetch succeeded (images still unavailable).")
+            return None
         data = resp.json()
         if "Errors" in data and verbose:
             print(f"PA-API Errors for {asin}: {data.get('Errors')}")
