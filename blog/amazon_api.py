@@ -35,7 +35,17 @@ def _get_signature_key(key, dateStamp, regionName, serviceName):
     return kSigning
 
 
-def _build_getitems_payload(asin: str, partner_tag: str) -> Dict:
+def _marketplace_for_host(host: str) -> str:
+    if host.endswith("amazon.com"):
+        return "www.amazon.com"
+    if host.endswith("amazon.co.uk"):
+        return "www.amazon.co.uk"
+    if host.endswith("amazon.co.jp"):
+        return "www.amazon.co.jp"
+    return "www.amazon.com"
+
+
+def _build_getitems_payload(asin: str, partner_tag: str, marketplace: str) -> Dict:
     return {
         "ItemIds": [asin],
         "Resources": [
@@ -45,6 +55,7 @@ def _build_getitems_payload(asin: str, partner_tag: str) -> Dict:
         ],
         "PartnerTag": partner_tag,
         "PartnerType": "Associates",
+        "Marketplace": marketplace,
     }
 
 
@@ -59,7 +70,20 @@ def fetch_paapi_images(asin: str, verbose: bool = False) -> Optional[Dict[str, s
     partner_tag = _get_env("AMAZON_PAAPI_PARTNER_TAG")
     region = _get_env("AMAZON_PAAPI_REGION") or "us-east-1"
 
+    if verbose:
+        print(
+            "PA-API env: ACCESS_KEY=%s, SECRET_KEY=%s, PARTNER_TAG=%s, REGION=%s"
+            % (
+                "set" if access_key else "missing",
+                "set" if secret_key else "missing",
+                partner_tag or "missing",
+                region,
+            )
+        )
+
     if not (access_key and secret_key and partner_tag):
+        if verbose:
+            print("PA-API missing required credentials; skipping fetch")
         return None
 
     host = PAAPI_HOSTS.get(region, PAAPI_HOSTS["us-east-1"])
@@ -68,7 +92,8 @@ def fetch_paapi_images(asin: str, verbose: bool = False) -> Optional[Dict[str, s
     amz_date = datetime.datetime.utcnow().strftime("%Y%m%dT%H%M%SZ")
     date_stamp = datetime.datetime.utcnow().strftime("%Y%m%d")
 
-    payload = _build_getitems_payload(asin, partner_tag)
+    marketplace = _marketplace_for_host(host)
+    payload = _build_getitems_payload(asin, partner_tag, marketplace)
     payload_json = json.dumps(payload)
 
     service = "ProductAdvertisingAPI"
@@ -112,6 +137,11 @@ def fetch_paapi_images(asin: str, verbose: bool = False) -> Optional[Dict[str, s
         "accept": "application/json",
         "Authorization": authorization_header,
     }
+
+    if verbose:
+        print(
+            f"PA-API request: endpoint={endpoint}, marketplace={marketplace}, partner_tag={partner_tag}, asin={asin}"
+        )
 
     try:
         resp = requests.post(endpoint, data=payload_json, headers=headers, timeout=10)
