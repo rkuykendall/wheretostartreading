@@ -131,6 +131,7 @@ def fetch_paapi_images(asin: str, verbose: bool = False) -> Optional[Dict[str, s
 
     headers = {
         "content-type": content_type,
+    "host": host,
         "x-amz-date": amz_date,
         "x-amz-target": target,
         "x-amz-content-sha256": payload_hash,
@@ -142,6 +143,9 @@ def fetch_paapi_images(asin: str, verbose: bool = False) -> Optional[Dict[str, s
         print(
             f"PA-API request: endpoint={endpoint}, marketplace={marketplace}, partner_tag={partner_tag}, asin={asin}"
         )
+    # Safe to print meta (no secrets)
+    print(f"PA-API signed headers: {signed_headers}")
+    print(f"PA-API canonical_request SHA256: {hashlib.sha256(canonical_request.encode('utf-8')).hexdigest()}")
 
     try:
         resp = requests.post(endpoint, data=payload_json, headers=headers, timeout=10)
@@ -152,7 +156,21 @@ def fetch_paapi_images(asin: str, verbose: bool = False) -> Optional[Dict[str, s
                 except Exception:
                     body = "<unreadable>"
                 print(f"PA-API HTTP {resp.status_code} for {asin}: {body}")
-            return None
+            # Retry once on transient InternalFailure
+            if resp.status_code == 404 and "InternalFailure" in (resp.text or ""):
+                if verbose:
+                    print("PA-API retrying once after InternalFailure...")
+                resp = requests.post(endpoint, data=payload_json, headers=headers, timeout=10)
+                if resp.status_code != 200:
+                    if verbose:
+                        try:
+                            body = resp.text[:800]
+                        except Exception:
+                            body = "<unreadable>"
+                        print(f"PA-API HTTP {resp.status_code} (retry) for {asin}: {body}")
+                    return None
+            else:
+                return None
         data = resp.json()
         if "Errors" in data and verbose:
             print(f"PA-API Errors for {asin}: {data.get('Errors')}")
